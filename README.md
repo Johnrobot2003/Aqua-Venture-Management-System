@@ -1,20 +1,22 @@
+🧾 Customer Management System
+A full-stack Customer Management System built with React, Node.js, and MongoDB.
+It allows admins to manage customers, users, and authentication with role-based access control.
+
 🚀 Features
-User authentication & role-based access
+🔑 User Authentication & Role-Based Access
 
-Add, edit, and delete customers
+📝 Add, Edit, and Delete Customers
 
-Responsive navbar with dynamic menu items
+📱 Responsive Navbar with Dynamic Menu Items
 
-API integration with Node.js backend
+🌐 API Integration with Node.js Backend
 
 🛠️ Tech Stack
-Frontend: React, TailwindCSS
+Layer	Technology
+Frontend	React, TailwindCSS
+Backend	Node.js, Express
+Database	MongoDB
+Auth	Passport.js
 
-Backend: Node.js, Express
-
-Database: MongoDB
-
-Authentication: Passport
-
-Layout Prototype
-<img width="1906" height="986" alt="image" src="https://github.com/user-attachments/assets/1323b56e-fef8-4d75-9fe8-2d6e4a55254b" />
+🎨 Layout Prototype
+<p align="center"> <img src="https://github.com/user-attachments/assets/1323b56e-fef8-4d75-9fe8-2d6e4a55254b" alt="Layout Prototype" width="80%"> </p>

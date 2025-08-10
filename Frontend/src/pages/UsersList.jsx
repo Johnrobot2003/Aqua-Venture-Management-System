@@ -4,7 +4,16 @@ import { Link } from "react-router-dom";
 
 export default function UserList() {
     const [users,setUsers] = useState([])
+    const [currentUserId, setCurrentUserId] = useState(null)
     useEffect(() => {
+
+        const currentUser = async()=>{
+            const res = await axios.get('http://localhost:3000/current-user',{
+                withCredentials: true
+            })
+            setCurrentUserId(res.data.user._id)
+        }
+
         const fetchUsers = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/users');
@@ -14,6 +23,7 @@ export default function UserList() {
             }
         }
         fetchUsers();
+        currentUser();
 
         const interval = setInterval(() => {
             fetchUsers();
@@ -46,7 +56,8 @@ export default function UserList() {
                         <p className="text-gray-700 dark:text-gray-400">
                             <span className="font-semibold">Role:</span> {user.role}
                         </p>
-                          <div className="flex space-x-2 mt-4">
+                        {user._id !== currentUserId &&(
+                             <div className="flex space-x-2 mt-4">
                             <button 
                                 onClick={() => handleDelete(user._id)}
                                 className="px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300">
@@ -58,6 +69,7 @@ export default function UserList() {
                                 Update User
                             </Link>
                         </div>
+                        )}
                     </div>
                       
                 ))}

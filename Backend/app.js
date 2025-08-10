@@ -1,3 +1,5 @@
+require('dotenv').config()
+console.log(process.env.SESSION_SECRET)
 const express = require('express')
 const mongoose = require('mongoose')
 const cron = require('node-cron')
@@ -5,9 +7,11 @@ const app = express()
 const Customer = require('./models/customers')
 const cors = require('cors')
 const User = require('./models/users')
+const PasswordSchema = require('./middleware/passwordValidator')
 const { ensureAuthenticated, ensureAdmin } = require('./middleware/auth')
 const passport = require('passport')
 const session = require('express-session')
+
 const LocalStrategy = require('passport-local').Strategy
 app.use(cors({
     origin: 'http://localhost:5173', // your frontend URL and port
@@ -44,9 +48,10 @@ cron.schedule('0 0 * * *', async () => {
 
 app.use(session({
     name: 'session-user',
-    secret: 'THISISASECRET',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    secure: true,
     cookie: {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
@@ -244,6 +249,17 @@ app.post('/change-password', async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ success: false, message: 'User not authenticated' });
     }
+
+    const passwordError = PasswordSchema.validate(newPassword, {details: true})
+
+    if (passwordError.length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'Password is either too common or does not meet requirements(must contain at least 1 capital letter and 1 digit)',
+            error: passwordError.map(e => e.message)
+        })
+    }
+
     try {
       const user = await User.findById(req.user._id);
         if (!user) {

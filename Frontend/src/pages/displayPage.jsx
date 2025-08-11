@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link,Navigate } from 'react-router-dom';
 
 function DisplayPage() {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        
+
         const fetchCustomers = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/customers');
+
                 setCustomers(response.data.data);
             } catch (error) {
                 console.error("Error fetching customers:", error);
             }
         }
+
+
         fetchCustomers();
 
         const interval = setInterval(() => {
@@ -22,6 +25,31 @@ function DisplayPage() {
         }, 10000); // Refresh every 60 seconds
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
+
+   const handleCheckIn = async (id) => {
+        try {
+            const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkIn`);
+            setCustomers(customers.map(customer => 
+                customer._id === id ? response.data.data : customer
+            ));
+        } catch (error) {
+            console.error("Error checking in customer:", error);
+            alert(error.response?.data?.message || "Error checking in customer");
+        }
+    }
+
+    const handleCheckOut = async (id) => {
+        try {
+            const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkOut`);
+            setCustomers(customers.map(customer => 
+                customer._id === id ? response.data.data : customer
+            ));
+        } catch (error) {
+            console.error("Error checking out customer:", error);
+            alert(error.response?.data?.message || "Error checking out customer");
+        }
+    }
+
 
     const handleDelete = async (id) => {
         try {
@@ -33,16 +61,16 @@ function DisplayPage() {
     }
 
     return (
-       <div className="container ml-20">
+        <div className="container ml-20">
             <h1 className="text-2xl font-bold text-blue-600 mb-6">All Customers</h1>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {customers.map(customer => (
                     <div key={customer._id} className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                         <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                             {customer.Name}
                         </h5>
-                        
+
                         <div className="mb-3 space-y-1">
                             <p className="text-gray-700 dark:text-gray-400">
                                 <span className="font-semibold">Type:</span> {customer.cutomerType}
@@ -51,37 +79,64 @@ function DisplayPage() {
                                 <span className="font-semibold">Phone:</span> {customer.phone}
                             </p>
                             <p className="text-gray-700 dark:text-gray-400">
-                                <span className="font-semibold">Email:</span> {customer.email}
-                            </p>
-                            <p className="text-gray-700 dark:text-gray-400">
-                                <span className="font-semibold">Address:</span> {customer.address}
-                            </p>
-                            <p className="text-gray-700 dark:text-gray-400">
                                 <span className="font-semibold">Member Since:</span> {new Date(customer.createdAt).toLocaleDateString()}
                             </p>
                             <p className="text-gray-700 dark:text-gray-400">
                                 <span className="font-semibold">Expires:</span> {new Date(customer.expireAt).toLocaleDateString()}
                             </p>
-                              <p className="text-gray-700 dark:text-gray-400">
-                                <span className="font-semibold mr-3">Status:</span> 
+                            <p className="text-gray-700 dark:text-gray-400">
+                                <span className="font-semibold mr-3">Status:</span>
                                 <span className={`font-semibold ${customer.status === 'active' ? 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300'}`}>
                                     {customer.status}
                                 </span>
                             </p>
+                             <p className="text-gray-700 dark:text-gray-400">
+                                <span className="font-semibold">Checked in status:</span> 
+                                <span className={`ml-2 ${customer.isCheckedIn ? 'text-green-500' : 'text-red-500'}`}>
+                                    {customer.isCheckedIn ? 
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">Checked in</span>
+                                     : 
+                                    <span class="bg-pink-100 text-pink-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-pink-900 dark:text-pink-300">Checked out</span>}
+                                </span>
+                            </p>
                         </div>
-                        
+
                         <div className="flex space-x-2 mt-4">
-                            <button 
+                            <button
                                 onClick={() => handleDelete(customer._id)}
                                 className="px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300"
                             >
                                 Delete
                             </button>
-                            <Link 
+                            <Link
                                 to={`/customers/editPage/${customer._id}`}
                                 className="px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
                             >
                                 Edit
+                            </Link>
+                            {!customer.isCheckedIn ? (
+                                <button 
+                                    onClick={() => handleCheckIn(customer._id)}
+                                    type="button"
+                                    className="px-3 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300"
+                                >
+                                    Check In
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={() => handleCheckOut(customer._id)}
+                                    type="button"
+                                    className="px-3 py-2 text-sm font-medium text-center text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300"
+                                >
+                                    Check Out
+                                </button>
+                                
+                            )}
+                             <Link
+                                to={`/customers/${customer._id}/checkInHistory`}
+                                className="px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                            >
+                                Check in History
                             </Link>
                         </div>
                     </div>

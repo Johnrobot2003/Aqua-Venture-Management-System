@@ -12,6 +12,7 @@ import UsersList from './pages/UsersList.jsx';
 import UpdateUser from './pages/UpdateUser.jsx';
 import ProtectedRoutes from '../ProtectedRoutes.jsx';
 import UserProfile from './pages/UserProfile.jsx';
+import CheckInHistory from './pages/CheckInHistory.jsx';
 function App() {
   return (
 
@@ -20,10 +21,27 @@ function App() {
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/customers" element={<DisplayPage />} />
-          <Route path="/customers/register" element={<RegisterPage />} />
-          <Route path="/customers/editPage/:id" element={<EditPage />} ></Route>
+          <Route path="/customers" element={
+
+            <ProtectedRoutes allowedRoles={['admin', 'staff']}>
+              <DisplayPage />
+            </ProtectedRoutes>
+          }
+
+          />
+          <Route path="/customers/register" element={
+            <ProtectedRoutes allowedRoles={['admin', 'staff']}>
+              <RegisterPage />
+            </ProtectedRoutes>
+          } />
+          <Route path="/customers/editPage/:id" element={
+
+            <ProtectedRoutes allowedRoles={['admin', 'staff']}>
+              <EditPage />
+            </ProtectedRoutes>
+          } />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/customers/:id/checkInHistory" element={<CheckInHistory />} />
           <Route path='/users/registerUser' element={
             <ProtectedRoutes allowedRoles={['admin']}>
               <RegisterUserPage />
@@ -39,12 +57,19 @@ function App() {
           } />
           <Route path='/users/updateUser/:id' element={
             <ProtectedRoutes allowedRoles={['admin']}>
-            <UpdateUser />
+              <UpdateUser />
             </ProtectedRoutes>
-            } 
+          }
+
+          />
+
+          <Route path='/profile' element=
+          {
+          <ProtectedRoutes allowedRoles={['admin','staff']}>
+          <UserProfile />
+          </ProtectedRoutes>
             
-            />
-          <Route path='/profile' element={<UserProfile />} />
+          } />
         </Routes>
 
 

@@ -40,6 +40,19 @@ const customerSchema = new Schema({
         type: String,
         enum: ['expired', 'active'],
         default: 'active'
+    },
+    checkIns : [{
+        checkInTime : {
+            type: Date,
+            default: Date.now
+        },
+        checkOutTime : Date,
+        duration: Number
+    }],
+    lastCheckIn : Date,
+    isCheckedIn: {
+        type: Boolean,
+        default: false
     }
 })
 

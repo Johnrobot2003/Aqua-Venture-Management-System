@@ -46,6 +46,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 
+
 app.use(session({
     name: 'session-user',
     secret: process.env.SESSION_SECRET,
@@ -73,7 +74,7 @@ passport.use(new LocalStrategy({
 
 
 
-app.get('/api/customers', async (req, res) => {
+app.get('/api/customers', ensureAuthenticated,async (req, res) => {
     try {
         const customers = await Customer.find()
         res.status(200).json({ success: true, data: customers })
@@ -135,6 +136,111 @@ app.patch('/api/customers/:id', async (req, res) => {
         });
 });
 
+app.post('/api/customers/:id/checkIn', async(req,res)=>{
+    const {id} = req.params;
+   
+    try {
+         const customer = await Customer.findById(id)
+
+        if (!customer) {
+            return res.status(404).json({ success: false, message: 'Customer not found' });
+        }
+
+        if (customer.isCheckedIn) {
+             return res.status(400).json({ success: false, message: 'Customer is already checked in' });
+        }
+
+        customer.isCheckedIn = true,
+        customer.lastCheckIn = new Date(),
+        customer.checkIns.push({checkInTime: new Date()})
+
+        await customer.save()
+
+        res.status(200).json({ 
+            success: true, 
+            message: 'Customer checked in successfully',
+            data: customer
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: 'Error checking in customer' });        
+    }
+})
+app.post('/api/customers/:id/checkOut', async(req,res)=>{
+    const {id} = req.params;
+
+    try{
+        const customer = await Customer.findById(id)
+        if (!customer) {
+            return res.status(404).json({succes: false, message: 'customer not found'})
+        }
+        const latestCheckIn = customer.checkIns
+                          .filter(c => c.checkInTime && !c.checkOutTime)
+                          .sort((a,b) => new Date(b.checkInTime) - new Date(a.checkInTime))[0]
+
+        if (!latestCheckIn) {
+             return res.status(400).json({ success: false, message: 'No active check-in found' });
+        }
+
+        const checkOutTime = new Date()
+        latestCheckIn.checkOutTime = checkOutTime
+        latestCheckIn.duration = Math.floor((checkOutTime - latestCheckIn.checkInTime)/(1000 * 60))
+
+        customer.isCheckedIn = false
+         await customer.save()
+
+          res.status(200).json({ 
+            success: true, 
+            message: 'Customer checked out successfully',
+            data: customer,
+            duration: latestCheckIn.duration
+        });
+    }catch(e){
+         console.error(error.message);
+        res.status(500).json({ success: false, message: 'Error checking out customer' });
+    }
+})
+
+app.get('/api/customers/:id/checkins', async(req, res) => {
+    const { id } = req.params;
+    console.log('Fetching check-ins for customer:', id); // Debug log
+
+    try {
+        // Validate the ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid customer ID format' 
+            });
+        }
+
+        const customer = await Customer.findById(id);
+        if (!customer) {
+            console.log('Customer not found:', id); // Debug log
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Customer not found' 
+            });
+        }
+
+        console.log('Customer found:', customer.Name); // Debug log
+        console.log('Check-ins count:', customer.checkIns?.length || 0); // Debug log
+
+        res.status(200).json({ 
+            success: true, 
+            data: customer.checkIns || [], // Ensure we always return an array
+            isCheckedIn: customer.isCheckedIn || false,
+            customerName: customer.Name
+        });
+    } catch (error) {
+        console.error('Error fetching check-in history:', error.message);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error fetching check-in history' 
+        });
+    }
+});
 app.post('/register', async (req, res) => {
     const { email, password, role } = req.body;
     try {

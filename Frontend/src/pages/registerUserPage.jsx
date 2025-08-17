@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 export default function RegisterUserPage() {
     const [formData, setFormData] = useState({
         email: '',
-        password: '1234',
         role: '' // Default role
     })
     const [userRole, setUserRole] = useState(null);

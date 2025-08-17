@@ -19,7 +19,12 @@ const customerSchema = new Schema({
         type: Date,
         default: function() {
             const date = new Date();
-            date.setMonth(date.getMonth() + 1);
+
+            if (this.cutomerType === 'member') {
+                date.setFullYear(date.getFullYear() + 1);
+            }else{
+                date.setMonth(date.getMonth() + 1);
+            }
             return date;
         }
        

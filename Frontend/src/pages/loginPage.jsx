@@ -24,10 +24,15 @@ export default function LoginPage() {
                 console.log("Login successful:", response.data.user);
                 navigate('/');
             } else {
-                alert(response.data.message); // Show error message
+                setMessage(response.data.message)
             }
         } catch (error) {
             console.error('Login error:', error);
+            if (error.response && error.response.data) {
+                setMessage(error.response.data.message);
+            } else {
+                setMessage("Something went wrong. Please try again.");
+            }
 
         }
     }
@@ -45,10 +50,11 @@ export default function LoginPage() {
                 <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
             </form>
             {message && (
-                <div className="mb-4 p-3 bg-blue-100 text-blue-800 rounded">
+                <div className="mb-4 p-3 rounded bg-red-100 text-red-800">
                     {message}
                 </div>
             )}
+
 
         </div>
     );

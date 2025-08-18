@@ -1,16 +1,15 @@
-  const Customer = require('../models/customers')
+const Customer = require('../models/customers')
+const mongoose = require('mongoose') // Add this import
 
-
-
-  exports.getCustomers = async (req, res) => {
-      try {
-          const customers = await Customer.find()
-          res.status(200).json({ success: true, data: customers })
-      } catch (error) {
-          console.error(error.message)
-          res.status(500).json({ success: false, message: 'Error fetching customers' })
-      }
+exports.getCustomers = async (req, res) => {
+    try {
+        const customers = await Customer.find()
+        res.status(200).json({ success: true, data: customers })
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).json({ success: false, message: 'Error fetching customers' })
     }
+}
 
 exports.getCustomerById = async (req, res) => {
     const { id } = req.params;
@@ -25,6 +24,7 @@ exports.getCustomerById = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching customer' });
     }
 }
+
 exports.registerCustomer = async (req, res) => {
     const customer = req.body
 
@@ -32,11 +32,10 @@ exports.registerCustomer = async (req, res) => {
 
     try {
         await newCustomer.save()
-
-        res.status(201).json({ succes: true, data: newCustomer })
+        res.status(201).json({ success: true, data: newCustomer }) // Fixed typo
     } catch (error) {
         console.error(error.message)
-        res.status(500)
+        res.status(500).json({ success: false, message: 'Error registering customer' }) // Added message
     }
 }
 
@@ -45,11 +44,13 @@ exports.deleteCustomer = async (req, res) => {
 
     try {
         await Customer.findByIdAndDelete(id)
-        res.status(201).json({ succes: true, message: 'deleted' })
+        res.status(200).json({ success: true, message: 'deleted' }) // Fixed typo and status code
     } catch (error) {
-        res.status(500)
+        console.error(error.message)
+        res.status(500).json({ success: false, message: 'Error deleting customer' }) // Added proper error response
     }
 }
+
 exports.updateCustomer = async (req, res) => {
     const { id } = req.params;
     await Customer.findByIdAndUpdate(id, req.body, { new: true })
@@ -61,22 +62,23 @@ exports.updateCustomer = async (req, res) => {
             res.status(500).json({ success: false, message: 'Error updating customer' });
         });
 }
-exports.checkInCustomer = async(req,res)=>{
+
+exports.checkInCustomer = async(req,res) => {
     const {id} = req.params;
    
     try {
-         const customer = await Customer.findById(id)
+        const customer = await Customer.findById(id)
 
         if (!customer) {
             return res.status(404).json({ success: false, message: 'Customer not found' });
         }
 
         if (customer.isCheckedIn) {
-             return res.status(400).json({ success: false, message: 'Customer is already checked in' });
+            return res.status(400).json({ success: false, message: 'Customer is already checked in' });
         }
 
-        customer.isCheckedIn = true,
-        customer.lastCheckIn = new Date(),
+        customer.isCheckedIn = true;
+        customer.lastCheckIn = new Date();
         customer.checkIns.push({checkInTime: new Date()})
 
         await customer.save()
@@ -92,13 +94,14 @@ exports.checkInCustomer = async(req,res)=>{
         res.status(500).json({ success: false, message: 'Error checking in customer' });        
     }
 }
-exports.checkOutCustomer = async(req,res)=>{
+
+exports.checkOutCustomer = async(req,res) => {
     const {id} = req.params;
 
     try{
         const customer = await Customer.findById(id)
         if (!customer) {
-            return res.status(404).json({succes: false, message: 'customer not found'})
+            return res.status(404).json({success: false, message: 'customer not found'}) // Fixed typo
         }
         const latestCheckIn = customer.checkIns
                           .filter(c => c.checkInTime && !c.checkOutTime)
@@ -113,19 +116,20 @@ exports.checkOutCustomer = async(req,res)=>{
         latestCheckIn.duration = Math.floor((checkOutTime - latestCheckIn.checkInTime)/(1000 * 60))
 
         customer.isCheckedIn = false
-         await customer.save()
+        await customer.save()
 
-          res.status(200).json({ 
+        res.status(200).json({ 
             success: true, 
             message: 'Customer checked out successfully',
             data: customer,
             duration: latestCheckIn.duration
         });
-    }catch(e){
+    }catch(error){ // Fixed variable name
          console.error(error.message);
         res.status(500).json({ success: false, message: 'Error checking out customer' });
     }
 }
+
 exports.getCheckIns = async(req, res) => {
     const { id } = req.params;
     console.log('Fetching check-ins for customer:', id); // Debug log
@@ -165,4 +169,3 @@ exports.getCheckIns = async(req, res) => {
         });
     }
 }
-

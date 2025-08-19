@@ -9,4 +9,5 @@ router.get('/:id', ensureAuthenticated, userController.getUserById)
 router.delete('/:id', ensureAuthenticated,userController.deleteUser)
 router.patch('/:id',ensureAuthenticated, userController.updateUser)
 
+
 module.exports = router

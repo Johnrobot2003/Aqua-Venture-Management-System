@@ -57,7 +57,7 @@ export default function Navbar() {
         <nav className="bg-blue-500 border-gray-200 dark:bg-gray-900 mb-5">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <Link to={'/'} className="text-white flex space-x-3 font-bold text-4xl">
-                    <img src="https://scontent.fmnl43-1.fna.fbcdn.net/v/t39.30808-6/518380631_122149707662796142_2714769267742585064_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGY5lCoHNP7lWLxqA1X9s06EukDSplHRtYS6QNKmUdG1sk6bAO4y8TvM68cS49dLt4ZzEX7D8qaEzQemOIsKYZN&_nc_ohc=5eYucl0tBOUQ7kNvwGIR4_r&_nc_oc=AdmBDG-HXZzCl1XXxdvllk_EvFndMPjyTjB6cWKoG_-whVU2e47sTLFC2mL6HeopGjg&_nc_zt=23&_nc_ht=scontent.fmnl43-1.fna&_nc_gid=FnbFoJHt9RHlxLptLD4f3Q&oh=00_AfUQ2LbZySiOgajRvFxTy39INx14Zc6399mUhpCrACZY5A&oe=68969AA5" class="h-12 rounded" alt="Flowbite Logo" />
+                    <img src="/AFGLogo.jpg" class="h-12 rounded" />
                 </Link>
                   <button className="md:hidden" onClick = {toggleMobileMenu}>
                     {isInMobile ?(

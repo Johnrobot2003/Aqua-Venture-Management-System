@@ -11,9 +11,27 @@ const customerSchema = new Schema({
         type: String,
         enum: ['monthly', 'member']
     },
+    monthlyAccess:{
+        type: String,
+        enum: ['Basic','Silver','Gold']
+    },
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    monthlyExpires:{
+        type: Date,
+        default: function() {
+            const date = new Date();
+            if (this.monthlyAccess === 'Basic') {
+                date.setMonth(date.getMonth() + 1)
+            }else if(this.monthlyAccess === 'Silver'){
+                date.setMonth(date.getMonth() + 2)
+            }else if(this.monthlyAccess === 'Gold'){
+                date.setMonth(date.getMonth()+4)
+            }
+            return date
+        }
     },
     expireAt: {
         type: Date,
@@ -35,7 +53,8 @@ const customerSchema = new Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     address: {
         type: String,

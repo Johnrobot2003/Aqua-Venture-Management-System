@@ -6,6 +6,12 @@ function DisplayPage() {
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [checkinFilter, setCheckinFilter] = useState('all');
+    const [filteredCustomers, setFilteredCustomers] = useState([]);
+    const [typeFilter, setTypeFilter] = useState('all')
+    const [memberFilter, setMemberFilter] = useState('all')
+    const [userRole, setUserRole] = useState(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -24,17 +30,54 @@ function DisplayPage() {
 
         fetchCustomers();
 
-        const interval = setInterval(() => {
-            fetchCustomers();
-        }, 10000); // Refresh every 10 seconds
+        // const interval = setInterval(() => {
+        //     fetchCustomers();
+        // }, 10000);
 
-        return () => clearInterval(interval);
+        // return () => clearInterval(interval);
     }, []);
+
+
+    useEffect(() => {
+        let filtered = customers;
+
+        if (checkinFilter !== 'all') {
+            const isCheckedIn = checkinFilter === 'checkedin';
+            filtered = filtered.filter(customer => customer.isCheckedIn === isCheckedIn);
+        }
+        if (typeFilter !== 'all') {
+            filtered = filtered.filter(customer => customer.monthlyAccess === typeFilter);
+        }
+        if (memberFilter !== 'all') {
+            filtered = filtered.filter(customer => customer.cutomerType === memberFilter)
+        }
+        setFilteredCustomers(filtered);
+    }, [customers, checkinFilter, typeFilter, memberFilter]);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/current-user', { withCredentials: true });
+                if (response.data.success) {
+                    setIsLoggedIn(true);
+                    setUserRole(response.data.user.role);
+                } else {
+                    setIsLoggedIn(false);
+                    setUserRole(null);
+                }
+            } catch (error) {
+                console.error('Error checking authentication:', error);
+                setIsLoggedIn(false);
+                setUserRole(null);
+            }
+        }
+        checkAuth();
+    }, [])
 
     const handleCheckIn = async (id) => {
         try {
             const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkIn`);
-            setCustomers(customers.map(customer => 
+            setCustomers(customers.map(customer =>
                 customer._id === id ? response.data.data : customer
             ));
         } catch (error) {
@@ -46,7 +89,7 @@ function DisplayPage() {
     const handleCheckOut = async (id) => {
         try {
             const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkOut`);
-            setCustomers(customers.map(customer => 
+            setCustomers(customers.map(customer =>
                 customer._id === id ? response.data.data : customer
             ));
         } catch (error) {
@@ -56,8 +99,6 @@ function DisplayPage() {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this customer?")) return;
-        
         try {
             await axios.delete(`http://localhost:3000/api/customers/${id}`);
             setCustomers(customers.filter(customer => customer._id !== id));
@@ -65,6 +106,12 @@ function DisplayPage() {
             console.error("Error deleting customer:", error);
             alert("Failed to delete customer. Please try again.");
         }
+    };
+
+    const clearFilter = () => {
+        setCheckinFilter('all');
+        setTypeFilter('all')
+        setMemberFilter('all')
     };
 
     if (loading) {
@@ -90,21 +137,92 @@ function DisplayPage() {
         <div className="container mx-auto p-4 lg:p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl md:text-3xl font-bold text-blue-600">All Customers</h1>
-                <Link 
-                    to="/customers/register" 
+                <Link
+                    to="/customers/register"
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
                     Add New Customer
                 </Link>
             </div>
 
-            {customers.length === 0 ? (
+            {/* Filter Section */}
+            <div className="bg-white rounded-lg shadow p-4 mb-6 border border-gray-200">
+                <div className="flex flex-wrap gap-4 items-center">
+                    <h3 className="text-lg font-semibold text-gray-700 mr-4">Filter:</h3>
+
+                    {/* Check-in Status Filter */}
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-600 mb-1">Check-in Status</label>
+                        <select
+                            value={checkinFilter}
+                            onChange={(e) => setCheckinFilter(e.target.value)}
+                            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="all">All Customers</option>
+                            <option value="checkedin">Checked In</option>
+                            <option value="checkedout">Checked Out</option>
+                        </select>
+
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-600 mb-1">Type Filter</label>
+                        <select
+                            value={typeFilter}
+                            onChange={(e) => setTypeFilter(e.target.value)}
+                            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="all">All Types</option>
+                            <option value="Basic">Basic</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Gold">Gold</option>
+                        </select>
+
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-600 mb-1">Customer Types Filter</label>
+                        <select
+                            value={memberFilter}
+                            onChange={(e) => setMemberFilter(e.target.value)}
+                            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="all">All Customer Types</option>
+                            <option value="member">Member</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+
+                    </div>
+
+                    {/* Clear Filter Button */}
+                    <div className="flex flex-col justify-end">
+                        <button
+                            onClick={clearFilter}
+                            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            Clear Filter
+                        </button>
+                    </div>
+                </div>
+
+                {/* Results Count */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p className="text-sm text-gray-600">
+                        Showing {filteredCustomers.length} of {customers.length} customers
+                    </p>
+                </div>
+            </div>
+
+            {filteredCustomers.length === 0 ? (
                 <div className="text-center py-10">
-                    <p className="text-gray-600 text-lg">No customers found. Add a new customer to get started.</p>
+                    <p className="text-gray-600 text-lg">
+                        {customers.length === 0
+                            ? "No customers found. Add a new customer to get started."
+                            : "No customers match the selected filter."
+                        }
+                    </p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                    {customers.map(customer => (
+                    {filteredCustomers.map(customer => (
                         <div key={customer._id} className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-transform ">
                             <div className="p-4 md:p-6">
                                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
@@ -115,6 +233,18 @@ function DisplayPage() {
                                     <p className="text-gray-700 dark:text-gray-400 truncate">
                                         <span className="font-semibold">Type:</span> {customer.cutomerType}
                                     </p>
+                                    <p className="text-gray-700 dark:text-gray-400 truncate">
+                                        <span className="font-semibold">Monthly Access:</span> <span
+                                            className={`px-2 py-1 rounded text-xs font-medium ${customer.monthlyAccess === 'Basic'
+                                                ? 'bg-gray-200 text-gray-800'
+                                                : customer.monthlyAccess === 'Silver'
+                                                    ? 'bg-gray-400 text-white'
+                                                    : 'bg-yellow-500 text-yellow-900'
+                                                }`}
+                                        >
+                                            {customer.monthlyAccess}
+                                        </span>
+                                    </p>
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Phone:</span> {customer.phone}
                                     </p>
@@ -124,19 +254,22 @@ function DisplayPage() {
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Expires:</span> {new Date(customer.expireAt).toLocaleDateString()}
                                     </p>
+                                    <p className="text-gray-700 dark:text-gray-400">
+                                        <span className="font-semibold">Monthly Access Valid till:</span> {new Date(customer.monthlyExpires).toLocaleDateString()}
+                                    </p>
                                     <p className="flex items-center text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold mr-2">Status:</span>
-                                        <span className={`inline-flex items-center ${customer.status === 'active' ? 
-                                            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 
+                                        <span className={`inline-flex items-center ${customer.status === 'active' ?
+                                            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
                                             'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'} 
                                             text-xs font-medium px-2.5 py-0.5 rounded-sm`}>
                                             {customer.status}
                                         </span>
                                     </p>
                                     <p className="flex items-center text-gray-700 dark:text-gray-400">
-                                        <span className="font-semibold">Checked in:</span> 
-                                        <span className={`ml-2 ${customer.isCheckedIn ? 
-                                            'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 
+                                        <span className="font-semibold">Checked in:</span>
+                                        <span className={`ml-2 ${customer.isCheckedIn ?
+                                            'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
                                             'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300'} 
                                             text-xs font-medium px-2.5 py-0.5 rounded-sm`}>
                                             {customer.isCheckedIn ? 'Checked in' : 'Checked out'}
@@ -145,12 +278,15 @@ function DisplayPage() {
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 mt-4">
-                                    <button
-                                        onClick={() => handleDelete(customer._id)}
-                                        className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 transition-colors"
-                                    >
-                                        Delete
-                                    </button>
+
+                                    {isLoggedIn && userRole === 'admin' && (
+                                        <button
+                                            onClick={() => handleDelete(customer._id)}
+                                            className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 transition-colors"
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
                                     <Link
                                         to={`/customers/editPage/${customer._id}`}
                                         className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition-colors"
@@ -158,14 +294,14 @@ function DisplayPage() {
                                         Edit
                                     </Link>
                                     {!customer.isCheckedIn ? (
-                                        <button 
+                                        <button
                                             onClick={() => handleCheckIn(customer._id)}
                                             className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 transition-colors"
                                         >
                                             Check In
                                         </button>
                                     ) : (
-                                        <button 
+                                        <button
                                             onClick={() => handleCheckOut(customer._id)}
                                             className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 transition-colors"
                                         >

@@ -14,9 +14,14 @@
 
     const LocalStrategy = require('passport-local').Strategy
     app.use(cors({
-        origin: 'http://localhost:5173', // your frontend URL and port
-        credentials: true
-    }));
+    origin: [
+        'http://localhost:5173', // your frontend URL
+        'https://hoppscotch.io',  // Hoppscotch web app
+        'https://hopp.sh',        // Hoppscotch short URL
+        'http://localhost:3000'   // if testing from same port
+    ],
+    credentials: true
+}));
     // app.use(cors())
     const db = mongoose.connection;
     mongoose.connect('mongodb://localhost:27017/gym-management-system').catch(err => {

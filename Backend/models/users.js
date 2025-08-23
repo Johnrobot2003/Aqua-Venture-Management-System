@@ -21,8 +21,6 @@ const userSchema = new Schema({
         type: Date,
         required: false
     }
-}, {
-    timestamps: true // This will add createdAt and updatedAt fields for debugging
 })
 
 userSchema.plugin(passportLocalMongoose, {

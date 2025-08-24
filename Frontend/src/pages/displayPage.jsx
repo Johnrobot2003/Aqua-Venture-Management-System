@@ -12,7 +12,7 @@ function DisplayPage() {
     const [memberFilter, setMemberFilter] = useState('all')
     const [userRole, setUserRole] = useState(null)
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    const [searchTerm, setSearchTerm] = useState('')
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
@@ -51,8 +51,11 @@ function DisplayPage() {
         if (memberFilter !== 'all') {
             filtered = filtered.filter(customer => customer.cutomerType === memberFilter)
         }
+        if (searchTerm.trim() !== '') {
+            filtered = filtered.filter(customer => customer.Name.toLowerCase().includes(searchTerm.toLowerCase()))
+        }
         setFilteredCustomers(filtered);
-    }, [customers, checkinFilter, typeFilter, memberFilter]);
+    }, [customers, checkinFilter, typeFilter, memberFilter,searchTerm]) ;
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -112,6 +115,7 @@ function DisplayPage() {
         setCheckinFilter('all');
         setTypeFilter('all')
         setMemberFilter('all')
+        setSearchTerm('')
     };
 
     if (loading) {
@@ -144,7 +148,28 @@ function DisplayPage() {
                     Add New Customer
                 </Link>
             </div>
-
+             <div className="bg-white rounded-lg shadow p-4 mb-4 border border-gray-200">
+                <div className="flex items-center gap-4">
+                    <label className="text-lg font-semibold text-gray-700">Search:</label>
+                    <div className="flex-1 max-w-md">
+                        <input
+                            type="text"
+                            placeholder="Search by customer name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            className="px-3 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                        >
+                            Clear
+                        </button>
+                    )}
+                </div>
+            </div>
             {/* Filter Section */}
             <div className="bg-white rounded-lg shadow p-4 mb-6 border border-gray-200">
                 <div className="flex flex-wrap gap-4 items-center">
@@ -211,12 +236,14 @@ function DisplayPage() {
                 </div>
             </div>
 
-            {filteredCustomers.length === 0 ? (
+             {filteredCustomers.length === 0 ? (
                 <div className="text-center py-10">
                     <p className="text-gray-600 text-lg">
                         {customers.length === 0
                             ? "No customers found. Add a new customer to get started."
-                            : "No customers match the selected filter."
+                            : searchTerm 
+                                ? `No customers matches the name "${searchTerm}".`
+                                : "No customers match the selected filter."
                         }
                     </p>
                 </div>
@@ -278,7 +305,6 @@ function DisplayPage() {
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 mt-4">
-
                                     {isLoggedIn && userRole === 'admin' && (
                                         <button
                                             onClick={() => handleDelete(customer._id)}

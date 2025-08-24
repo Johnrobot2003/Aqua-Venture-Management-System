@@ -27,10 +27,10 @@ const customerSchema = new Schema({
                 date.setMonth(date.getMonth() + 1)
             }else if(this.monthlyAccess === 'Silver'){
                 date.setMonth(date.getMonth() + 2)
-            }else if(this.monthlyAccess === 'Gold'){
+            }else if(this.monthlyAccess === 'Gold'){ 
                 date.setMonth(date.getMonth()+4)
             }
-            return date
+            return date 
         }
     },
     expireAt: {
@@ -62,8 +62,13 @@ const customerSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['expired', 'active'],
-        default: 'active'
+        enum: ['expired', 'currently active'],
+        default: 'currently active'
+    },
+    monthlyStatus:{
+        type: String,
+        enum: ['expired', 'up to date'],
+        default: 'up to date'
     },
     checkIns : [{
         checkInTime : {

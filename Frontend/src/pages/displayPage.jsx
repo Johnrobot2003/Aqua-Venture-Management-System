@@ -55,7 +55,7 @@ function DisplayPage() {
             filtered = filtered.filter(customer => customer.Name.toLowerCase().includes(searchTerm.toLowerCase()))
         }
         setFilteredCustomers(filtered);
-    }, [customers, checkinFilter, typeFilter, memberFilter,searchTerm]) ;
+    }, [customers, checkinFilter, typeFilter, memberFilter, searchTerm]);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -148,7 +148,7 @@ function DisplayPage() {
                     Add New Customer
                 </Link>
             </div>
-             <div className="bg-white rounded-lg shadow p-4 mb-4 border border-gray-200">
+            <div className="bg-white rounded-lg shadow p-4 mb-4 border border-gray-200">
                 <div className="flex items-center gap-4">
                     <label className="text-lg font-semibold text-gray-700">Search:</label>
                     <div className="flex-1 max-w-md">
@@ -236,12 +236,12 @@ function DisplayPage() {
                 </div>
             </div>
 
-             {filteredCustomers.length === 0 ? (
+            {filteredCustomers.length === 0 ? (
                 <div className="text-center py-10">
                     <p className="text-gray-600 text-lg">
                         {customers.length === 0
                             ? "No customers found. Add a new customer to get started."
-                            : searchTerm 
+                            : searchTerm
                                 ? `No customers matches the name "${searchTerm}".`
                                 : "No customers match the selected filter."
                         }
@@ -289,7 +289,7 @@ function DisplayPage() {
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Monthly Access Valid till:</span> {new Date(customer.monthlyExpires).toLocaleDateString()}
                                     </p>
-                                       <p className="text-gray-700 dark:text-gray-400">
+                                    <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Monthly status:</span>  <span className={`inline-flex items-center ${customer.monthlyStatus === 'up to date' ?
                                             'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
                                             'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'} 

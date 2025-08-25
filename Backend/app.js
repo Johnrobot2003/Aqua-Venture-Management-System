@@ -11,6 +11,7 @@
     const passport = require('passport')
     const session = require('express-session')
     const userController = require('./controllers/users')
+    const dashboardRouter = require('./Routes/Dashboard')
 
     const LocalStrategy = require('passport-local').Strategy
     app.use(cors({
@@ -97,6 +98,7 @@ passport.use(new LocalStrategy({
 app.use('/', authRoute)
 app.use('/api/users', userRoutes)
 app.use('/api/customers', customerRoutes)
+app.use('/api/dashboard', dashboardRouter)
 app.post('/forgot-password', userController.forgotPassword)
 app.post('/reset-password', userController.resetPassword)
  

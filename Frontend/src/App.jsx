@@ -15,6 +15,7 @@ import UserProfile from './pages/UserProfile.jsx';
 import CheckInHistory from './pages/CheckInHistory.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import CheckInSystem from './pages/CheckInSystem.jsx';
 function App() {
   return (
 
@@ -23,6 +24,7 @@ function App() {
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/checkin" element = {<CheckInSystem/>}/>
           <Route path="/forgot-password" element = {<ForgotPasswordPage/>}/>
           <Route path="/reset-password/:token" element = {<ResetPasswordPage/>}/>
           <Route path="/customers" element={

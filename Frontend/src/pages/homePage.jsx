@@ -15,17 +15,33 @@ export default function HomePage() {
     const [recentActivity, setRecentActivity] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        axios.get('http://localhost:3000/current-user', { withCredentials: true })
-            .then(res => {
-                if (res.data.success) {
-                    setEmail(res.data.user.email);
-                    setRole(res.data.user.role);
-                    setMessage(`Welcome back, ${res.data.user.email}!`);
-                }
-            })
-            .catch(() => setEmail(''));
-    }, []);
+    const today = new Date().getDate();
+
+    const gymHours = today === 0
+                 ? "8:00 am - 8:00pm 🙏 Day of the lord"
+                 : "6:00 am - 10:00pm"
+   useEffect(() => {
+    const fetchCurrentUser = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get('http://localhost:3000/current-user', { withCredentials: true });
+            if (res.data.success) {
+                setEmail(res.data.user.email);
+                setRole(res.data.user.role);
+                setMessage(`Welcome back, ${res.data.user.email}!`);
+            } else {
+                setEmail('');
+            }
+        } catch (err) {
+            setEmail('');
+        } finally {
+            setLoading(false); 
+        }
+    };
+
+    fetchCurrentUser();
+}, []);
+
 
     useEffect(() => {
         // Fetch dashboard statistics
@@ -92,6 +108,13 @@ export default function HomePage() {
         </Link>
     );
 
+      if (loading) {
+       return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
     if (!email) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -113,6 +136,7 @@ export default function HomePage() {
         );
     }
 
+  
     return (
         <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
             {/* Welcome Header */}
@@ -145,25 +169,21 @@ export default function HomePage() {
                     title="Total Customers"
                     value={loading ? "..." : stats.totalCustomers}
                     icon="👥"
-                    color="border-blue-500"
                 />
                 <StatCard
                     title="Active Members"
                     value={loading ? "..." : stats.activeCustomers}
                     icon="✅"
-                    color="border-green-500"
                 />
                 <StatCard
                     title="Checked In Today"
                     value={loading ? "..." : stats.checkedInToday}
                     icon="🏃‍♂️"
-                    color="border-purple-500"
                 />
                 <StatCard
                     title="Expiring This Week"
                     value={loading ? "..." : stats.expiringThisWeek}
                     icon="⚠️"
-                    color="border-yellow-500"
                 />
             </div>
 
@@ -239,7 +259,7 @@ export default function HomePage() {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
                             <span className="font-medium">Gym Hours</span>
-                            <span className="text-blue-600">6:00 AM - 11:00 PM</span>
+                            <span className="text-blue-600">{gymHours}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
                             <span className="font-medium">Current Capacity</span>

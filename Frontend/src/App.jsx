@@ -24,9 +24,14 @@ function App() {
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/checkin" element = {<CheckInSystem/>}/>
-          <Route path="/forgot-password" element = {<ForgotPasswordPage/>}/>
-          <Route path="/reset-password/:token" element = {<ResetPasswordPage/>}/>
+          <Route path="/checkin" element={
+            <ProtectedRoutes>
+              <CheckInSystem />
+            </ProtectedRoutes>
+
+          } />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
           <Route path="/customers" element={
 
             <ProtectedRoutes allowedRoles={['admin', 'staff']}>
@@ -70,12 +75,12 @@ function App() {
           />
 
           <Route path='/profile' element=
-          {
-          <ProtectedRoutes allowedRoles={['admin','staff']}>
-          <UserProfile />
-          </ProtectedRoutes>
-            
-          } />
+            {
+              <ProtectedRoutes allowedRoles={['admin', 'staff']}>
+                <UserProfile />
+              </ProtectedRoutes>
+
+            } />
         </Routes>
 
 

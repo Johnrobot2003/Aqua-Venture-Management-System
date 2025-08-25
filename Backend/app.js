@@ -25,7 +25,9 @@
 }));
     // app.use(cors())
     const db = mongoose.connection;
-    mongoose.connect('mongodb://localhost:27017/gym-management-system').catch(err => {
+    const db_url = process.env.MONGO_URL 
+    const local_db = 'mongodb://localhost:27017/gym-management-system' 
+    mongoose.connect(local_db).catch(err => {
         console.error("MongoDB connection error:", err);
         process.exit(1); // Exit if can't connect to DB
     });

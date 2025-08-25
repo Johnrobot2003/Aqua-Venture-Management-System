@@ -25,9 +25,9 @@ export default function UserProfile(){
     }, []);
 
     if (!user) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <h1 className="text-3xl font-bold">Loading...</h1>
+           return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
         );
     }

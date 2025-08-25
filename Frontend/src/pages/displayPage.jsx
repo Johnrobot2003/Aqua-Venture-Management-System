@@ -330,7 +330,7 @@ function DisplayPage() {
                                         to={`/customers/editPage/${customer._id}`}
                                         className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition-colors"
                                     >
-                                        Edit
+                                        Info
                                     </Link>
                                     {!customer.isCheckedIn ? (
                                         <button

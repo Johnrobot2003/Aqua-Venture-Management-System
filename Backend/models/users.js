@@ -5,13 +5,13 @@ const passportLocalMongoose = require('passport-local-mongoose')
 const userSchema = new Schema({
     email: {
         type: String,
-        required: true,
+        required: true,   
         unique: true
     },
     role: {
         type: String,
         enum: ['staff', 'admin'],
-        default: 'staff' // Fixed: was 'user' but enum doesn't include 'user'
+        default: 'staff' 
     },
     resetPasswordToken: {
         type: String,

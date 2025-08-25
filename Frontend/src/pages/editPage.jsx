@@ -60,7 +60,9 @@ function editPage() {
                     const newMonthlyExpire = new Date()
                     newMonthlyExpire.setMonth(today.getMonth()+monthstoAdd)
                     updateData.monthlyExpires = newMonthlyExpire
+
                 }
+                updateData.monthlyStatus = 'up to date'
 
 
                 if (formData.cutomerType) {
@@ -74,6 +76,7 @@ function editPage() {
                     console.log("Customer type:", formData.cutomerType);
                     console.log("New expire date:", newExpireDate);
                 }
+
             }
             const response = await axios.patch(`http://localhost:3000/api/customers/${id}`, updateData);
             console.log("Customer updated:", response.data);

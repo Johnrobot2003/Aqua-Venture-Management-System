@@ -59,12 +59,8 @@
         );
         console.log(`Updated ${monthlyResult.modifiedCount} customers monthly status to expired.`);
 
-        // Delete monthly customers
-        const deleteMonthly = await Customer.deleteMany({
-            expireAt: { $lte: now },
-            cutomerType: 'monthly'
-        });
-        console.log(`Deleted ${deleteMonthly.deletedCount} monthly customers.`);
+        
+       
 
     } catch (error) {
         console.error('Error updating customer statuses:', error);

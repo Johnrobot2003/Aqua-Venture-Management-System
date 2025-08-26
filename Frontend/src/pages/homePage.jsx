@@ -120,7 +120,7 @@ export default function HomePage() {
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                        Welcome to Aqua Venture Management
+                        Welcome to AFG Management System
                     </h1>
                     <p className="text-xl text-gray-600 mb-8">
                         Please log in to access your dashboard
@@ -262,8 +262,8 @@ export default function HomePage() {
                             <span className="text-blue-600">{gymHours}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                            <span className="font-medium">Current Capacity</span>
-                            <span className="text-green-600">{stats.checkedInToday}/100</span>
+                            <span className="font-medium">Currently checked in</span>
+                            <span className="text-green-600">{stats.checkedInToday} customers</span>
                         </div>
                     </div>
                 </div>

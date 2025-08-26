@@ -278,14 +278,17 @@ function DisplayPage() {
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Created At: </span> {new Date(customer.createdAt).toLocaleDateString()}
                                     </p>
-                                    <p className="text-gray-700 dark:text-gray-400">
-                                        <span className="font-semibold">Expires:</span> {new Date(customer.expireAt).toLocaleDateString()} <span className={`inline-flex items-center ${customer.status === 'currently active' ?
-                                            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
-                                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'} 
+
+                                    {customer.cutomerType === 'member' &&
+                                        <p className="text-gray-700 dark:text-gray-400">
+                                            <span className="font-semibold">Membership Expires:</span> {new Date(customer.expireAt).toLocaleDateString()} <span className={`inline-flex items-center ${customer.status === 'currently active' ?
+                                                'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
+                                                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'} 
                                             text-xs font-medium px-2.5 py-0.5 rounded-sm`}>
-                                            {customer.status}
-                                        </span>
-                                    </p>
+                                                {customer.status}
+                                            </span>
+                                        </p>
+                                    }
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Monthly Access Valid till:</span> {new Date(customer.monthlyExpires).toLocaleDateString()}
                                     </p>

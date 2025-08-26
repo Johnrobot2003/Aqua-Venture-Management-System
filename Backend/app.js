@@ -17,9 +17,10 @@
     app.use(cors({
     origin: [
         'http://localhost:5173', // your frontend URL
-        'https://hoppscotch.io',  // Hoppscotch web app
-        'https://hopp.sh',        // Hoppscotch short URL
-        'http://localhost:3000'   // if testing from same port
+         'https://hoppscotch.io',  // Hoppscotch web app
+         'https://hopp.sh',        // Hoppscotch short URL
+        'http://localhost:3000' ,  // if testing from same port
+        'https://aquaventure.vercel.app'
     ],
     credentials: true
 }));

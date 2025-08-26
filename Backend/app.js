@@ -22,7 +22,8 @@ app.use(cors({
     origin: [
         'http://localhost:5173', // your frontend URL
         'http://localhost:3000',  // if testing from same port
-        'https://aquaventure.vercel.app'
+        'https://aquaventure.vercel.app',
+        'https://aqua-venture-backend.onrender.com'
     ],
     credentials: true
 }));
@@ -121,7 +122,7 @@ app.post('/reset-password', userController.resetPassword)
 
 
 
-
-app.listen(3000, () => {
-    console.log('Now listening on PORT 3000')
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+    console.log(`Now listening on ${PORT}`)
 })

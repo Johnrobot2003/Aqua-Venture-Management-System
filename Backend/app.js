@@ -1,48 +1,49 @@
-    require('dotenv').config()
-    console.log(process.env.SESSION_SECRET)
-    const express = require('express')
-    const mongoose = require('mongoose')
-    const cron = require('node-cron')
-    const app = express()
-    const Customer = require('./models/customers')
-    const cors = require('cors')
-    const User = require('./models/users')
-    const { ensureAuthenticated, ensureAdmin } = require('./middleware/auth')
-    const passport = require('passport')
-    const session = require('express-session')
-    const userController = require('./controllers/users')
-    const dashboardRouter = require('./Routes/Dashboard')
+require('dotenv').config()
+console.log(process.env.SESSION_SECRET)
+const express = require('express')
+const mongoose = require('mongoose')
+const cron = require('node-cron')
+const app = express()
+const Customer = require('./models/customers')
+const cors = require('cors')
+const User = require('./models/users')
+const { ensureAuthenticated, ensureAdmin } = require('./middleware/auth')
+const passport = require('passport')
+const session = require('express-session')
+const userController = require('./controllers/users')
+const dashboardRouter = require('./Routes/Dashboard')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
+const mongoSanitize = require('express-mongo-sanitize')
+const MongoStore = require('connect-mongo')
 
-    const LocalStrategy = require('passport-local').Strategy
-    app.use(cors({
+const LocalStrategy = require('passport-local').Strategy
+app.use(cors({
     origin: [
         'http://localhost:5173', // your frontend URL
-         'https://hoppscotch.io',  // Hoppscotch web app
-         'https://hopp.sh',        // Hoppscotch short URL
-        'http://localhost:3000' ,  // if testing from same port
+        'http://localhost:3000',  // if testing from same port
         'https://aquaventure.vercel.app'
     ],
     credentials: true
 }));
-    // app.use(cors())
-    const db = mongoose.connection;
-    const db_url = process.env.MONGO_URL 
-    const local_db = 'mongodb://localhost:27017/gym-management-system' 
-    mongoose.connect(local_db).catch(err => {
-        console.error("MongoDB connection error:", err);
-        process.exit(1); // Exit if can't connect to DB
-    });
-    db.on("error", console.error.bind(console, "connection error:"));
-    db.once("open", () => {
-        console.log("Database connected");
-    });
+// app.use(cors())
+const db = mongoose.connection;
+const db_url = process.env.MONGO_URL || 'mongodb://localhost:27017/gym-management-system'
+mongoose.connect(db_url).catch(err => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1); // Exit if can't connect to DB
+});
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Database connected");
+});
 
-    const authRoute = require('./Routes/Auth')
-    const userRoutes = require('./Routes/Users')
-    const customerRoutes = require('./Routes/Customers')
-    app.use(express.json())
+const authRoute = require('./Routes/Auth')
+const userRoutes = require('./Routes/Users')
+const customerRoutes = require('./Routes/Customers')
+app.use(express.json())
 
-   cron.schedule('* * * * *', async () => {
+cron.schedule('* * * * *', async () => {
     try {
         const now = new Date();
 
@@ -55,7 +56,7 @@
 
         // Update monthly status (FIXED: use monthlyExpires, not monthlyStatus)
         const monthlyResult = await Customer.updateMany(
-            { 
+            {
                 monthlyExpires: { $lte: now },  // Fixed: use monthlyExpires (DATE field)
                 monthlyStatus: 'up to date'     // Fixed: this is the condition, not comparison
             },
@@ -63,28 +64,41 @@
         );
         console.log(`Updated ${monthlyResult.modifiedCount} customers monthly status to expired.`);
 
-        
-       
+
+
 
     } catch (error) {
         console.error('Error updating customer statuses:', error);
     }
 });
 
+const store = MongoStore.create({
+    mongoUrl: db_url,
+    touchAfter: 24 * 60 * 60
 
+})
 
 app.use(session({
+    store,
     name: 'session-user',
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    secure: true,
     cookie: {
         httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        secure: true,
+        secure: false, 
+        sameSite: 'lax', 
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }))
+app.use(helmet())
+// app.use(mongoSanitize())
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter)
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -104,7 +118,7 @@ app.use('/api/customers', customerRoutes)
 app.use('/api/dashboard', dashboardRouter)
 app.post('/forgot-password', userController.forgotPassword)
 app.post('/reset-password', userController.resetPassword)
- 
+
 
 
 

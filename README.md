@@ -163,7 +163,21 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database-name
 
 - Real-time updates for check-in/check-out status
 - Efficient filtering and search capabilities
+  
+## UI
+<img width="1839" height="922" alt="image" src="https://github.com/user-attachments/assets/f2ccaa14-0e0b-4430-8282-e7aadbb734f1" />
+Login Page
+<img width="1920" height="1012" alt="image" src="https://github.com/user-attachments/assets/dea03c27-7357-4969-b5f4-fcf02d3ad91f" />
+Dashboard
+<img width="1907" height="967" alt="image" src="https://github.com/user-attachments/assets/12e64497-c014-4e4b-8f09-412c78bf0247" />
+Customer page
+<img width="1897" height="969" alt="image" src="https://github.com/user-attachments/assets/6d43954b-c2d2-416b-bdb2-031df3dfaa4a" />
+Check in System
 
+<img width="1910" height="933" alt="image" src="https://github.com/user-attachments/assets/1995bb1d-3330-45dc-9b19-23f902b94aff" />
+User management (Not yet finished)
+<img width="1678" height="998" alt="image" src="https://github.com/user-attachments/assets/93e61f7a-c9fe-41fa-b2fc-f760c7ae251e" />
+Profile Page
 ---
 
 **Built with  by John Rohan C. Acebo**

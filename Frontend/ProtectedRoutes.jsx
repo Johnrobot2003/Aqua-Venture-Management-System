@@ -7,7 +7,7 @@ export default function ProtectedRoutes({ children, allowedRoles }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/current-user', { withCredentials: true })
+        axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true })
             .then(res => {
                 if (res.data.success) {
                     setUser(res.data.user);

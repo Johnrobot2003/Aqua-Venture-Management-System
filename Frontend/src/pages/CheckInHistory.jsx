@@ -17,7 +17,7 @@ export default function CheckInHistory() {
                 const historyResponse = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkins`);
                 console.log('History API Response:', historyResponse.data); // Debug log
                 
-               
+                                                         
                 const customerResponse = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}`);
                 console.log('Customer API Response:', customerResponse.data); // Debug log
                 

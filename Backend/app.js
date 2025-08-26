@@ -79,6 +79,9 @@ const store = MongoStore.create({
 
 })
 
+// Trust the first proxy (required on Render/Heroku for secure cookies)
+app.set('trust proxy', 1)
+
 app.use(session({
     store,
     name: 'session-user',

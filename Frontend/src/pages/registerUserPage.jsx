@@ -31,7 +31,7 @@ export default function RegisterUserPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/register', formData);
+            const response = await axios.post('https://aqua-venture-backend.onrender.com/register', formData);
             console.log("User registered:", response.data);
             navigate('/users'); // Redirect to the home page after successful registration
         } catch (error) {

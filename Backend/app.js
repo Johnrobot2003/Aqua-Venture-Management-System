@@ -23,7 +23,7 @@ app.use(cors({
         'http://localhost:5173', // your frontend URL
         'http://localhost:3000',  // if testing from same port
         'https://aquaventure.vercel.app',
-        'https://aqua-venture-backend.onrender.com'
+        // 'https://aqua-venture-backend.onrender.com'
     ],
     credentials: true
 }));
@@ -87,9 +87,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: true,
-        secure: false, 
-        sameSite: 'lax', 
+        secure: process.env.NODE_ENV === 'production',  
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }))

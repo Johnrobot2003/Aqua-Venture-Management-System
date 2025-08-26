@@ -9,7 +9,7 @@ export default function UserProfile(){
     const [isError, setIsError] = useState(false)
 
      useEffect(() => {
-        fetch("http://localhost:3000/current-user", {
+        fetch("https://aqua-venture-backend.onrender.com/current-user", {
             credentials: "include",
         })
             .then(res => res.json())
@@ -34,7 +34,7 @@ export default function UserProfile(){
      const handleChangePassword = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:3000/change-password", {
+            const res = await fetch("https://aqua-venture-backend.onrender.com/change-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

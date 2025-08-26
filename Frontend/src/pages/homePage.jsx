@@ -24,7 +24,7 @@ export default function HomePage() {
     const fetchCurrentUser = async () => {
         setLoading(true);
         try {
-            const res = await axios.get('http://localhost:3000/current-user', { withCredentials: true });
+            const res = await axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true });
             if (res.data.success) {
                 setEmail(res.data.user.email);
                 setRole(res.data.user.role);
@@ -47,7 +47,7 @@ export default function HomePage() {
         // Fetch dashboard statistics
         const fetchStats = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/dashboard/stats');
+                const response = await axios.get('https://aqua-venture-backend.onrender.com/api/dashboard/stats');
                if (response.data.success) {
                 setStats(response.data.data)
                }
@@ -61,7 +61,7 @@ export default function HomePage() {
         // Fetch recent activity
         const fetchRecentActivity = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/dashboard/recent-activity');
+                const response = await axios.get('https://aqua-venture-backend.onrender.com/api/dashboard/recent-activity');
                 if (response.data.success) {
                     setRecentActivity(response.data.data)
                 }

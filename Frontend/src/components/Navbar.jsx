@@ -13,7 +13,7 @@ export default function Navbar() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/current-user', { withCredentials: true });
+                const response = await axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true });
                 if (response.data.success) {
                     setIsLoggedIn(true);
                     setUserRole(response.data.user.role);
@@ -32,7 +32,7 @@ export default function Navbar() {
 
     const handleLogout = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/logout', {}, { withCredentials: true });
+            const response = await axios.post('https://aqua-venture-backend.onrender.com/logout', {}, { withCredentials: true });
             if (response.data.success) {
                 setIsLoggedIn(false);
                 navigate('/login'); // Redirect to home page after logout

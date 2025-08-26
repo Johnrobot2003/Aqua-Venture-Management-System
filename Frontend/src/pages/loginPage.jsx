@@ -8,16 +8,18 @@ export default function LoginPage() {
     const [message, setMessage] = useState('')
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+   const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/login', {
+             const response = await axios.post('https://aqua-venture-backend.onrender.com/login', {
                 email,
                 password
+            },{
+              withCredentials: true
             });
             if (response.data.success) {
                 localStorage.setItem('currentUser', JSON.stringify(response.data.user));
-                const currentUserRes = await axios.get('http://localhost:3000/current-user', {
+                const currentUserRes = await axios.get('https://aqua-venture-backend.onrender.com/current-user', {
                     withCredentials: true
                 })
                 setMessage(currentUserRes.data.message)

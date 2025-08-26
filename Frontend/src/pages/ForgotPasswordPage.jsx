@@ -10,7 +10,7 @@ export default function ForgotPasswordPage() {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/forgot-password",
+                "https://aqua-venture-backend.onrender.com/forgot-password",
                 { email },
                 { withCredentials: true })
 

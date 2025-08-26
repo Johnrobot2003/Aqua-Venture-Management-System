@@ -17,7 +17,7 @@ function DisplayPage() {
         const fetchCustomers = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:3000/api/customers');
+                const response = await axios.get('https://aqua-venture-backend.onrender.com/api/customers');
                 setCustomers(response.data.data);
                 setError(null);
             } catch (error) {
@@ -60,7 +60,7 @@ function DisplayPage() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/current-user', { withCredentials: true });
+                const response = await axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true });
                 if (response.data.success) {
                     setIsLoggedIn(true);
                     setUserRole(response.data.user.role);
@@ -79,7 +79,7 @@ function DisplayPage() {
 
     const handleCheckIn = async (id) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkIn`);
+            const response = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkIn`);
             setCustomers(customers.map(customer =>
                 customer._id === id ? response.data.data : customer
             ));
@@ -91,7 +91,7 @@ function DisplayPage() {
 
     const handleCheckOut = async (id) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkOut`);
+            const response = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkOut`);
             setCustomers(customers.map(customer =>
                 customer._id === id ? response.data.data : customer
             ));
@@ -103,7 +103,7 @@ function DisplayPage() {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/api/customers/${id}`);
+            await axios.delete(`https://aqua-venture-backend.onrender.com/api/customers/${id}`);
             setCustomers(customers.filter(customer => customer._id !== id));
         } catch (error) {
             console.error("Error deleting customer:", error);

@@ -8,7 +8,7 @@ export default function UserList() {
     useEffect(() => {
 
         const currentUser = async()=>{
-            const res = await axios.get('http://localhost:3000/current-user',{
+            const res = await axios.get('https://aqua-venture-backend.onrender.com/current-user',{
                 withCredentials: true
             })
             setCurrentUserId(res.data.user._id)
@@ -16,7 +16,7 @@ export default function UserList() {
 
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/users');
+                const response = await axios.get('https://aqua-venture-backend.onrender.com/api/users');
                 setUsers(response.data.data);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -33,7 +33,7 @@ export default function UserList() {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/api/users/${id}`);
+            await axios.delete(`https://aqua-venture-backend.onrender.com/api/users/${id}`);
             setUsers(users.filter(user => user._id !== id));
         } catch (error) {
             console.error("Error deleting user:", error);

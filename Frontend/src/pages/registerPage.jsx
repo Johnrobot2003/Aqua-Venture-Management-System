@@ -34,7 +34,7 @@ function RegisterPage() {
         delete customerData.firstName;
         delete customerData.lastName;
         
-        const response = await axios.post('http://localhost:3000/api/customers', customerData);
+        const response = await axios.post('https://aqua-venture-backend.onrender.com/api/customers', customerData);
         console.log("Customer registered:", response.data);
         setMessage(`Customer ${response.data.data.Name} successfully registered`)
          setFormData({

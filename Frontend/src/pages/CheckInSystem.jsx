@@ -13,7 +13,7 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
         const fetchCustomers = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("http://localhost:3000/api/customers");
+                const response = await axios.get("https://aqua-venture-backend.onrender.com/api/customers");
 
                 // Only keep customers with monthlyStatus 'up to date'
                 const filtered = response.data.data.filter(
@@ -43,7 +43,7 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
 
     const handleCheckIn = async (id) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkIn`);
+            const response = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkIn`);
             setCustomers(customers.map((c) => (c._id === id ? response.data.data : c)));
         } catch (err) {
             console.error("Error checking in customer:", err);
@@ -53,7 +53,7 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
 
     const handleCheckOut = async (id) => {
         try {
-            const response = await axios.post(`http://localhost:3000/api/customers/${id}/checkOut`);
+            const response = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkOut`);
             setCustomers(customers.map((c) => (c._id === id ? response.data.data : c)));
         } catch (err) {
             console.error("Error checking out customer:", err);

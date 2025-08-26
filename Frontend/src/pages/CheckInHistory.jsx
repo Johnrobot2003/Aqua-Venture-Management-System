@@ -14,11 +14,11 @@ export default function CheckInHistory() {
         
         const fetchCheckInHistory = async () => {
             try {
-                const historyResponse = await axios.get(`http://localhost:3000/api/customers/${id}/checkins`);
+                const historyResponse = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkins`);
                 console.log('History API Response:', historyResponse.data); // Debug log
                 
                
-                const customerResponse = await axios.get(`http://localhost:3000/api/customers/${id}`);
+                const customerResponse = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}`);
                 console.log('Customer API Response:', customerResponse.data); // Debug log
                 
                 setCheckIns(historyResponse.data.data || []);

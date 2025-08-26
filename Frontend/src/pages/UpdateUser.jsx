@@ -13,7 +13,7 @@ export default function UpdateUser() {
 
     useEffect(() => {
         // Fetch user data by ID
-        axios.get(`http://localhost:3000/api/users/${id}`, { withCredentials: true })
+        axios.get(`https://aqua-venture-backend.onrender.com/api/users/${id}`, { withCredentials: true })
             .then(res => {
                 if (res.data.success) {
                     setUser({
@@ -40,7 +40,7 @@ export default function UpdateUser() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`http://localhost:3000/api/users/${id}`, user, { withCredentials: true });
+            await axios.patch(`https://aqua-venture-backend.onrender.com/api/users/${id}`, user, { withCredentials: true });
             navigate('/users');
         } catch (error) {
             console.error("Error updating user:", error);

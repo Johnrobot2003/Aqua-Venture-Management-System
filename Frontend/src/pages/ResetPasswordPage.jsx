@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
 
     try {
 
-      const res = await axios.post("http://localhost:3000/reset-password", {
+      const res = await axios.post("https://aqua-venture-backend.onrender.com/reset-password", {
         token,
         newPassword,
       });

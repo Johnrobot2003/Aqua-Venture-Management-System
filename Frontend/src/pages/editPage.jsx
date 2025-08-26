@@ -18,7 +18,7 @@ function editPage() {
     useEffect(() => {
         const fetchCustomer = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/customers/${id}`);
+                const response = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}`);
                 setFormData(response.data.data);
             } catch (error) {
                 console.error("Error fetching customer:", error);
@@ -78,7 +78,7 @@ function editPage() {
                 }
 
             }
-            const response = await axios.patch(`http://localhost:3000/api/customers/${id}`, updateData);
+            const response = await axios.patch(`https://aqua-venture-backend.onrender.com/api/customers/${id}`, updateData);
             console.log("Customer updated:", response.data);
             navigate('/customers'); // Redirect to the customers page after successful update
         } catch (error) {

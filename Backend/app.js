@@ -20,13 +20,13 @@ const MongoStore = require('connect-mongo')
 const LocalStrategy = require('passport-local').Strategy
 app.use(cors({
     origin: [
-        'http://localhost:5173', // your frontend URL
-        'http://localhost:3000',  // if testing from same port
+        'http://localhost:5173',
+        'http://localhost:3000',
         'https://aquaventure.vercel.app',
-        // 'https://aqua-venture-backend.onrender.com'
     ],
     credentials: true
 }));
+
 // app.use(cors())
 const db = mongoose.connection;
 const db_url = process.env.MONGO_URL || 'mongodb://localhost:27017/gym-management-system'
@@ -87,10 +87,12 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',  
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        secure: process.env.NODE_ENV === 'production', // only true on Render
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     }
-}))
+}));
+
 app.use(helmet())
 // app.use(mongoSanitize())
 const limiter = rateLimit({

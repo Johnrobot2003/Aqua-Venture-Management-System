@@ -63,7 +63,7 @@ const store = MongoStore.create({
 })
 
 app.use(session({
-  store,
+  store,sdds
   name: 'session-user',
   secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
@@ -74,7 +74,7 @@ app.use(session({
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
     maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
   }
-}))
+})) 
 
 // ---------------- PASSPORT ----------------
 app.use(passport.initialize())

@@ -259,7 +259,7 @@ function DisplayPage() {
                                 <div className="mb-3 space-y-2">
                                     <p className="text-gray-700 dark:text-gray-400 truncate">
                                         <span className="font-semibold">Type:</span>
-                                        <span className={`px-2 py-1 rounded text-xs font-medium ${customer.cutomerType === 'monthly' 
+                                        <span className={`px-2 py-1 rounded text-xs font-medium ${customer.cutomerType === 'member' 
                                         ? 'bg-yellow-500 text-gray-800'
                                         :  'bg-gray-200 text-gray-800'}`}>
                                             {customer.cutomerType}

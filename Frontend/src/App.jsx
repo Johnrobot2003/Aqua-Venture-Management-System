@@ -16,6 +16,7 @@ import CheckInHistory from './pages/CheckInHistory.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import CheckInSystem from './pages/CheckInSystem.jsx';
+import Reports from './pages/Reports.jsx';
 function App() {
   return (
 
@@ -30,6 +31,11 @@ function App() {
             </ProtectedRoutes>
 
           } />
+          <Route path="/reports" element={
+            <ProtectedRoutes>
+              <Reports/>
+            </ProtectedRoutes>
+            }/>
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
           <Route path="/customers" element={

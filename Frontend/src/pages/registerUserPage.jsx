@@ -8,16 +8,23 @@ export default function RegisterUserPage() {
         role: '' // Default role
     })
     const [userRole, setUserRole] = useState(null);
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        console.log("Current user in localStorage:", currentUser);
-        if (!currentUser || currentUser.role !== 'admin') {
-            navigate('/');
-        } else {
-            setUserRole(currentUser.role);
+        const check = async () => {
+            try {
+                const res = await axios.get('/current-user')
+                if (!res.data.success || res.data.user.role !== 'admin') {
+                    navigate('/')
+                } else {
+                    setUserRole(res.data.user.role)
+                }
+            } catch {
+                navigate('/')
+            }
         }
+        check()
     }, [navigate]);
 
     const handleChange = (e) => {
@@ -30,11 +37,13 @@ export default function RegisterUserPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true)
         try {
             const response = await axios.post('https://aqua-venture-backend.onrender.com/register', formData);
             console.log("User registered:", response.data);
             navigate('/users'); // Redirect to the home page after successful registration
         } catch (error) {
+            setLoading(false)
             console.error("Error registering user:", error);
         }
     };
@@ -55,7 +64,16 @@ export default function RegisterUserPage() {
                         <option value="staff">Staff</option>
                     </select>
                     </div>
-                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                    <button
+              type="submit"
+              disabled={loading}
+              className={`w-full font-medium py-2.5 rounded-lg text-white ${loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+                }`}
+            >
+              {loading ? "Registering user ..." : "Register"}
+            </button>
                 </form>
                 <Link to={'/users'} className="py-2.5 px-5 me-2 mt-3 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Back to List</Link>
                

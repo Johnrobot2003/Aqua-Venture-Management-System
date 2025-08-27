@@ -7,13 +7,14 @@ import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 export default function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userRole, setUserRole] = useState(null);
+    const [authLoading, setAuthLoading] = useState(true)
     const [isInMobile, setIsInMobile] = useState(false)
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true });
+                const response = await axios.get('/current-user');
                 if (response.data.success) {
                     setIsLoggedIn(true);
                     setUserRole(response.data.user.role);
@@ -25,7 +26,7 @@ export default function Navbar() {
                 console.error('Error checking authentication:', error);
                 setIsLoggedIn(false);
                 setUserRole(null);
-            }
+            } finally { setAuthLoading(false) }
         }
         checkAuth();
     }, [location.pathname]);
@@ -72,29 +73,29 @@ export default function Navbar() {
                         <li>
                             <Link to={'/'}  className="block py-2 px-3 text-white rounded-sm hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" >Home</Link>
                         </li>
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <Link to={'/customers'} className="block py-2 px-3 text-white rounded-sm hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">All Customers</Link>
                             </li>
                         )}
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <Link to={'/customers/register'} className="block py-2 px-3 text-white rounded-sm hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Add Customer</Link>
                             </li>
                         )}
-                        {isLoggedIn && userRole === 'admin' && (
+                        {!authLoading && isLoggedIn && userRole === 'admin' && (
                             <li>
                                 <Link to={'/users'} className="block py-2 px-3 text-white rounded-sm hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Users</Link>
                             </li>
                         )}
                       
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <Link to={'/profile'}  className="flex py-2 px-3 text-white rounded-sm hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                                 <User className="h-6 w-6" />
                                 <span className="hidden md:inline">Profile</span>
                             </Link>
                         )}
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <button onClick={handleLogout} className="block py-2 px-3 text-white hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white">
                                     Logout
@@ -102,7 +103,7 @@ export default function Navbar() {
                             </li>
                         )}
 
-                        {!isLoggedIn && (
+                        {!authLoading && !isLoggedIn && (
                             <li>
                                 <li>
                                     <Link to={'/login'} className="block py-2 px-3 text-white rounded-sm hover:bg-blue-600 md:hover:bg-transparent md:border-0 md:hover:text-blue-200 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Login</Link>
@@ -122,7 +123,7 @@ export default function Navbar() {
                                 Home
                             </Link>
                         </li>
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <Link 
                                     to={'/customers'} 
@@ -132,7 +133,7 @@ export default function Navbar() {
                                 </Link>
                             </li>
                         )}
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <Link 
                                     to={'/customers/register'} 
@@ -142,7 +143,7 @@ export default function Navbar() {
                                 </Link>
                             </li>
                         )}
-                        {isLoggedIn && userRole === 'admin' && (
+                        {!authLoading && isLoggedIn && userRole === 'admin' && (
                             <li>
                                 <Link 
                                     to={'/users'} 
@@ -152,7 +153,7 @@ export default function Navbar() {
                                 </Link>
                             </li>
                         )}
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <Link 
                                     to={'/profile'} 
@@ -163,7 +164,7 @@ export default function Navbar() {
                                 </Link>
                             </li>
                         )}
-                        {isLoggedIn && (
+                        {!authLoading && isLoggedIn && (
                             <li>
                                 <button 
                                     onClick={handleLogout} 
@@ -173,7 +174,7 @@ export default function Navbar() {
                                 </button>
                             </li>
                         )}
-                        {!isLoggedIn && (
+                        {!authLoading && !isLoggedIn && (
                             <li>
                                 <Link 
                                     to={'/login'} 

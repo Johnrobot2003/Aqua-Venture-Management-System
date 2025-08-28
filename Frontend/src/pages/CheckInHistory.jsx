@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -9,6 +9,7 @@ export default function CheckInHistory() {
     const [isCheckedIn, setIsCheckedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
         
@@ -45,7 +46,7 @@ export default function CheckInHistory() {
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-lg">Loading check-in history...</div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
         );
     }
@@ -56,6 +57,14 @@ export default function CheckInHistory() {
                 <div className="text-red-500 text-lg">Error: {error}</div>
             </div>
         );
+    }
+
+    const handleback = ()=>{
+        if (window.history.length > 1) {
+            navigate(-1)
+        }else{
+            navigate('/customers')
+        }
     }
 
     return (
@@ -133,7 +142,7 @@ export default function CheckInHistory() {
                 )}
             </div>
             <div className='pt-[20px]'>
-                <Link to={'/customers'} className="py-2.5 px-5 me-2 mt-3 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-blue-500 rounded-lg border border-gray-200 hover:bg-blue-600  focus:z-10 focus:ring-4 focus:ring-blue-400 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Back to List</Link>
+                <button onClick={handleback} className="py-2.5 px-5 me-2 mt-3 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-blue-500 rounded-lg border border-gray-200 hover:bg-blue-600  focus:z-10 focus:ring-4 focus:ring-blue-400 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Back to List</button>
             </div>
            
         </div>

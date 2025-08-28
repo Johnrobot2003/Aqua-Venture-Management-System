@@ -8,6 +8,7 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
     const [error, setError] = useState(null);
     const [filteredCustomers, setFilteredCustomers] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
+    const [buttonLoading, setButtonLoading] = useState(null)
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -42,26 +43,40 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
     }, [customers, searchTerm]);
 
     const handleCheckIn = async (id) => {
+        setButtonLoading(id)
         try {
             const response = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkIn`);
             setCustomers(customers.map((c) => (c._id === id ? response.data.data : c)));
         } catch (err) {
+            setButtonLoading(null)
             console.error("Error checking in customer:", err);
             alert(err.response?.data?.message || "Error checking in customer");
+        }finally{
+            setButtonLoading(null)
         }
     };
 
     const handleCheckOut = async (id) => {
+        setButtonLoading(id)
         try {
             const response = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkOut`);
             setCustomers(customers.map((c) => (c._id === id ? response.data.data : c)));
         } catch (err) {
+            setButtonLoading(null)
             console.error("Error checking out customer:", err);
             alert(err.response?.data?.message || "Error checking out customer");
+        }finally{
+            setButtonLoading(null)
         }
     };
 
-    if (loading) return <p>Loading customers...</p>;
+    if (loading){
+         return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
     if (error) return <p>{error}</p>;
 
     return (
@@ -169,19 +184,38 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                                     {!customer.isCheckedIn ? (
                                         <button
                                             onClick={() => handleCheckIn(customer._id)}
-                                            className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700"
+                                            disabled = {buttonLoading === customer._id}
+                                            className={`flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white  rounded-lg
+                                            ${buttonLoading === customer._id 
+                                                ? "bg-green-400 cursor-not-allowed"
+                                                : "bg-green-600 hover:bg-green-700"
+                                            }
+                                                `}
                                         >
-                                            Check In
+                                            {buttonLoading === customer._id ? "Checking in ..." : "Check in"}
                                         </button>
                                     ) : (
                                         <button
                                             onClick={() => handleCheckOut(customer._id)}
-                                            className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-yellow-600 rounded-lg hover:bg-yellow-700"
+                                            className={`flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white  rounded-lg
+                                                ${buttonLoading === customer._id
+                                                    ? "bg-yellow-400 cursor-not-allowed"
+                                                    : "bg-yellow-600  hover:bg-yellow-700"
+                                                }
+                                                
+                                                `}
                                         >
-                                            Check Out
+                                            {buttonLoading === customer._id ? "Checking out ..." : "Check out"}
                                         </button>
                                     )}
+                                     <Link
+                                        to={`/customers/${customer._id}/checkInHistory`}
+                                        className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 transition-colors"
+                                    >
+                                        History
+                                    </Link>
                                 </div>
+                                   
                             </div>
                         </div>
                     ))}

@@ -16,6 +16,7 @@ const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const MongoStore = require('connect-mongo')
+const reportsRouter = require('./Routes/Reports')
 
 const LocalStrategy = require('passport-local').Strategy
 app.use(cors({
@@ -120,6 +121,7 @@ app.use('/', authRoute)
 app.use('/api/users', userRoutes)
 app.use('/api/customers', customerRoutes)
 app.use('/api/dashboard', dashboardRouter)
+app.use('/api/reports', reportsRouter)
 app.post('/forgot-password', userController.forgotPassword)
 app.post('/reset-password', userController.resetPassword)
 

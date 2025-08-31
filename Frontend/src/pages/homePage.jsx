@@ -15,7 +15,7 @@ export default function HomePage() {
     const [recentActivity, setRecentActivity] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const today = new Date().getDate();
+    const today = new Date().getDay();
 
     const gymHours = today === 0
                  ? "8:00 am - 8:00pm 🙏 Day of the lord"
@@ -164,17 +164,17 @@ export default function HomePage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <StatCard
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+                {/* <StatCard
                     title="Total Customers"
                     value={loading ? "..." : stats.totalCustomers}
                     icon="👥"
-                />
-                <StatCard
+                /> 
+                 <StatCard
                     title="Active Members"
                     value={loading ? "..." : stats.activeCustomers}
                     icon="✅"
-                />
+                /> */}
                 <StatCard
                     title="Checked In Today"
                     value={loading ? "..." : stats.checkedInToday}
@@ -262,8 +262,8 @@ export default function HomePage() {
                             <span className="text-blue-600">{gymHours}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                            <span className="font-medium">Currently checked in</span>
-                            <span className="text-green-600">{stats.checkedInToday} customers</span>
+                            <span className="font-medium">Current Capacity</span>
+                            <span className="text-green-600">{stats.checkedInToday}/100 customers</span>
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ export default function UserProfile(){
     const [newPassword, setNewPassword] = useState('')
     const [message, setMessage] = useState('')
     const [isError, setIsError] = useState(false)
+    const [loading, setLoading] = useState(false)
 
      useEffect(() => {
         fetch("https://aqua-venture-backend.onrender.com/current-user", {
@@ -25,7 +26,7 @@ export default function UserProfile(){
     }, []);
 
     if (!user) {
-           return (
+           return( 
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
@@ -33,7 +34,9 @@ export default function UserProfile(){
     }
      const handleChangePassword = async (e) => {
         e.preventDefault();
+         setLoading(true)
         try {
+            
             const res = await fetch("https://aqua-venture-backend.onrender.com/change-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -47,6 +50,8 @@ export default function UserProfile(){
         } catch (err) {
             setIsError(true);
             setMessage("Error changing password");
+        }finally{
+            setLoading(false)
         }
         setOldPassword('');
         setNewPassword('');
@@ -80,9 +85,13 @@ export default function UserProfile(){
                 />
                 <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    disabled={loading}
+                    className={` text-white px-4 py-2 rounded 
+                        ${loading ? "bg-gray-400 cursor-not-allowed"
+                                  :  "bg-blue-500 hover:bg-blue-700"
+                        }`}
                 >
-                    Change Password
+                   {loading ? 'Changing Password ...' : 'Change Password'}
                 </button>
             </form>
 

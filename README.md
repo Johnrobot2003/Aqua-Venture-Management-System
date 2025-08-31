@@ -173,9 +173,11 @@ Dashboard
 Customer page
 <img width="1897" height="969" alt="image" src="https://github.com/user-attachments/assets/6d43954b-c2d2-416b-bdb2-031df3dfaa4a" />
 Check in System
+<img width="1920" height="993" alt="image" src="https://github.com/user-attachments/assets/e12e61e8-e0ad-4c89-a1ef-d58570af4bed" />
+Temporary Reports page
 
-<img width="1910" height="933" alt="image" src="https://github.com/user-attachments/assets/1995bb1d-3330-45dc-9b19-23f902b94aff" />
-User management (Not yet finished)
+<img width="1920" height="980" alt="image" src="https://github.com/user-attachments/assets/73ce3cd0-2b9c-43d3-9d92-2e1e6923bf3d" />
+User management 
 <img width="1678" height="998" alt="image" src="https://github.com/user-attachments/assets/93e61f7a-c9fe-41fa-b2fc-f760c7ae251e" />
 Profile Page
 ---

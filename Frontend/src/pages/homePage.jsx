@@ -165,7 +165,7 @@ export default function HomePage() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-                {/* <StatCard
+                <StatCard
                     title="Total Customers"
                     value={loading ? "..." : stats.totalCustomers}
                     icon="👥"
@@ -174,7 +174,7 @@ export default function HomePage() {
                     title="Active Members"
                     value={loading ? "..." : stats.activeCustomers}
                     icon="✅"
-                /> */}
+                />
                 <StatCard
                     title="Checked In Today"
                     value={loading ? "..." : stats.checkedInToday}

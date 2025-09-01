@@ -10,11 +10,23 @@ exports.getReports = async (req, res) => {
         const monthlyCount = await Customer.countDocuments({
             cutomerType: 'monthly'
         })
+        const goldMembers = await Customer.countDocuments({
+            monthlyAccess: 'Gold'
+        })
+        const silvermembers = await Customer.countDocuments({
+             monthlyAccess: 'Silver'
+        })
+         const basicMembers = await Customer.countDocuments({
+             monthlyAccess: 'Basic'
+        })
         res.json({
             success: true,
             data: {
                 member: memberCount,
-                monthly: monthlyCount
+                monthly: monthlyCount,
+                gold: goldMembers,
+                silver: silvermembers,
+                basic: basicMembers
             }
         })
     } catch (error) {

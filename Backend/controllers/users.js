@@ -82,7 +82,7 @@ exports.forgotPassword = async (req, res) => {
       
 
         // Send email with reset link
-        const resetLink = `https://aquaventure.vercel.app/reset-password/${token}`;
+        const resetLink = `https://aquaventure-beige.vercel.app//reset-password/${token}`;
         await resetPassword(user.email, resetLink);
 
         return res.status(200).json({ success: true, message: "Password reset link sent to email." });

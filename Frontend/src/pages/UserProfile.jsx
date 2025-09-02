@@ -5,6 +5,7 @@ export default function UserProfile(){
     const [user, setUser] = useState(null)
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [message, setMessage] = useState('')
     const [isError, setIsError] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -41,7 +42,7 @@ export default function UserProfile(){
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({ oldPassword, newPassword }),
+                body: JSON.stringify({ oldPassword, newPassword, confirmPassword}),
             });
             const data = await res.json();
 
@@ -55,6 +56,7 @@ export default function UserProfile(){
         }
         setOldPassword('');
         setNewPassword('');
+        setConfirmPassword('');
     };
 
   return (
@@ -80,6 +82,14 @@ export default function UserProfile(){
                     placeholder="New Password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    className="border p-2 w-full"
+                    required
+                />
+                 <input
+                    type="password"
+                    placeholder="confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="border p-2 w-full"
                     required
                 />

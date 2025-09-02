@@ -62,13 +62,16 @@ exports.getCurrentUser = (req, res) => {
     }
 }
 exports.changePassword = async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword, confirmPassword } = req.body;
     if (!req.isAuthenticated()) {
         return res.status(401).json({ success: false, message: 'User not authenticated' });
     }
 
     const passwordError = PasswordSchema.validate(newPassword, { details: true })
 
+    if (newPassword !== confirmPassword) {
+        return res.status(400).json({ success: false, message: 'New password and confirm password do not match' });
+    }
     if (passwordError.length > 0) {
         return res.status(400).json({
             success: false,
@@ -87,6 +90,7 @@ exports.changePassword = async (req, res) => {
                 if (err.name === 'IncorrectPasswordError') {
                     return res.status(400).json({ success: false, message: 'Incorrect old password' });
                 }
+
                 return res.status(500).json({ success: false, message: 'Error changing password' });
             }
             res.status(200).json({ success: true, message: 'Password changed successfully' });

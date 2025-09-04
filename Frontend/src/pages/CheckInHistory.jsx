@@ -9,25 +9,24 @@ export default function CheckInHistory() {
     const [isCheckedIn, setIsCheckedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(""); // new state for filtering
     const navigate = useNavigate()
 
     useEffect(() => {
-        
         const fetchCheckInHistory = async () => {
             try {
                 const historyResponse = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkins`);
-                console.log('History API Response:', historyResponse.data); // Debug log
+                console.log('History API Response:', historyResponse.data);
                 
-                                                         
                 const customerResponse = await axios.get(`https://aqua-venture-backend.onrender.com/api/customers/${id}`);
-                console.log('Customer API Response:', customerResponse.data); // Debug log
+                console.log('Customer API Response:', customerResponse.data);
                 
                 setCheckIns(historyResponse.data.data || []);
                 setIsCheckedIn(historyResponse.data.isCheckedIn || false);
                 setCustomerName(customerResponse.data.data?.Name || 'Unknown Customer');
                 setLoading(false);
             } catch (err) {
-                console.error('API Error:', err); // Debug log
+                console.error('API Error:', err);
                 setError(err.response?.data?.message || 'Failed to load check-in history');
                 setLoading(false);
             }
@@ -40,8 +39,6 @@ export default function CheckInHistory() {
             setLoading(false);
         }
     }, [id]);
-
-
 
     if (loading) {
         return (
@@ -59,13 +56,22 @@ export default function CheckInHistory() {
         );
     }
 
-    const handleback = ()=>{
+    const handleBack = () => {
         if (window.history.length > 1) {
             navigate(-1)
-        }else{
+        } else {
             navigate('/customers')
         }
     }
+
+    // filter checkIns by selectedDate
+    const filteredCheckIns = selectedDate
+        ? checkIns.filter((checkIn) => {
+            if (!checkIn.checkInTime) return false;
+            const checkInDate = new Date(checkIn.checkInTime).toISOString().split("T")[0];
+            return checkInDate === selectedDate;
+        })
+        : checkIns;
 
     return (
         <div className="container mx-auto px-4 py-8 min-h-screen">
@@ -80,8 +86,29 @@ export default function CheckInHistory() {
                 )}
             </div>
 
+            {/* Date filter input */}
+            <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                    Filter by Date:
+                </label>
+                <input 
+                    type="date" 
+                    value={selectedDate} 
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="border rounded px-3 py-2 text-sm"
+                />
+                {selectedDate && (
+                    <button 
+                        onClick={() => setSelectedDate("")}
+                        className="py-2.5 px-5 ml-2 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    >
+                        Clear
+                    </button>
+                )}
+            </div>
+
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                {checkIns && checkIns.length > 0 ? (
+                {filteredCheckIns && filteredCheckIns.length > 0 ? (
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
@@ -100,7 +127,7 @@ export default function CheckInHistory() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {checkIns.map((checkIn, index) => (
+                            {filteredCheckIns.map((checkIn, index) => (
                                 <tr key={checkIn._id || index} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {checkIn.checkInTime 
@@ -136,15 +163,16 @@ export default function CheckInHistory() {
                     <div className="text-center py-12">
                         <div className="text-gray-500 text-lg mb-2">No Check-In Records Found</div>
                         <div className="text-gray-400 text-sm">
-                            This customer hasn't checked in yet.
+                            {selectedDate 
+                                ? `No records found for ${selectedDate}` 
+                                : "This customer hasn't checked in yet."}
                         </div>
                     </div>
                 )}
             </div>
             <div className='pt-[20px]'>
-                <button onClick={handleback} className="py-2.5 px-5 me-2 mt-3 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-blue-500 rounded-lg border border-gray-200 hover:bg-blue-600  focus:z-10 focus:ring-4 focus:ring-blue-400 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Back to List</button>
+                <button onClick={handleBack} className="py-2.5 px-5 me-2 mt-3 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-blue-500 rounded-lg border border-gray-200 hover:bg-blue-600  focus:z-10 focus:ring-4 focus:ring-blue-400 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Back to List</button>
             </div>
-           
         </div>
     );
 }

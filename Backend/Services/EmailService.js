@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-
+const QrCode = require('qrcode')
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth:{
@@ -25,4 +25,7 @@ async function resetPassword(email, newPassword){
        text: `Hello! This is your reset Link: ${newPassword}. If you did not request a password change kindly ingonre this.`
     })
 }
-module.exports = {sendTempPassword, resetPassword}
+
+
+
+module.exports = { sendTempPassword, resetPassword}

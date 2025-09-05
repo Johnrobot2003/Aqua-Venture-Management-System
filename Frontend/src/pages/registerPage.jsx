@@ -14,6 +14,7 @@ function RegisterPage() {
         monthlyAccess: '',
 
     });
+    
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
     const handleChange = (e) => {

@@ -204,7 +204,7 @@ export default function HomePage() {
                     color="border-blue-500"
                 />
                 <QuickAction
-                    title="Check-in System"
+                    title="Members/Monthly Check-in System"
                     description="Quick customer check-in/out"
                     link="/checkin"
                     icon="🚪"

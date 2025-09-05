@@ -17,6 +17,7 @@ const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const MongoStore = require('connect-mongo')
 const reportsRouter = require('./Routes/Reports')
+const WalkCustomers = require('./Routes/WalkIns')
 
 const LocalStrategy = require('passport-local').Strategy
 app.use(cors({
@@ -24,6 +25,8 @@ app.use(cors({
         'http://localhost:5173',
         'http://localhost:3000',
         'https://aquaventure-beige.vercel.app',
+        // 'https://hoppscotch.io',          // Hoppscotch production
+        // 'https://hoppscotch.com',  
     ],
     credentials: true
 }));
@@ -98,7 +101,7 @@ app.use(session({
 }));
 
 app.use(helmet())
-// app.use(mongoSanitize())
+app.use(mongoSanitize())
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100 // limit each IP to 100 requests per windowMs
@@ -122,6 +125,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/customers', customerRoutes)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/reports', reportsRouter)
+app.use('/api/daily-walkin', WalkCustomers)  
 app.post('/forgot-password', userController.forgotPassword)
 app.post('/reset-password', userController.resetPassword)
 

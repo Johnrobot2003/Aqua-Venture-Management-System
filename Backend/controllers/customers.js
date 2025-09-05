@@ -34,7 +34,7 @@ exports.registerCustomer = async (req, res) => {
     try {
         await newCustomer.save()
 
-        const qrData = `https://aqua-venture-backend.onrender.com/customer/api/customers/${newCustomer._id}`;
+        const qrData = `https://aqua-venture-backend.onrender.com/api/customers/${newCustomer._id}`;
         // Generate QR code
         const qrCodeImageBuffer = await QrCode.toBuffer(qrData);
         let transporter = nodemailer.createTransport({

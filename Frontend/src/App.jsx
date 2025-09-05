@@ -17,6 +17,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import CheckInSystem from './pages/CheckInSystem.jsx';
 import Reports from './pages/Reports.jsx';
+import WalkInPage from './pages/WalkInPage.jsx';
 function App() {
   return (
 
@@ -28,6 +29,12 @@ function App() {
           <Route path="/checkin" element={
             <ProtectedRoutes>
               <CheckInSystem />
+            </ProtectedRoutes>
+
+          } />
+           <Route path="/walkins" element={
+            <ProtectedRoutes>
+              <WalkInPage />
             </ProtectedRoutes>
 
           } />

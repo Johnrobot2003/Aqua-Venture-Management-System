@@ -18,29 +18,29 @@ export default function HomePage() {
     const today = new Date().getDay();
 
     const gymHours = today === 0
-                 ? "8:00 am - 8:00pm 🙏 Day of the lord"
-                 : "6:00 am - 10:00pm"
-   useEffect(() => {
-    const fetchCurrentUser = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true });
-            if (res.data.success) {
-                setEmail(res.data.user.email);
-                setRole(res.data.user.role);
-                setMessage(`Welcome back, ${res.data.user.email}!`);
-            } else {
+        ? "8:00 am - 8:00pm 🙏 Day of the lord"
+        : "6:00 am - 10:00pm"
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get('https://aqua-venture-backend.onrender.com/current-user', { withCredentials: true });
+                if (res.data.success) {
+                    setEmail(res.data.user.email);
+                    setRole(res.data.user.role);
+                    setMessage(`Welcome back, ${res.data.user.email}!`);
+                } else {
+                    setEmail('');
+                }
+            } catch (err) {
                 setEmail('');
+            } finally {
+                setLoading(false);
             }
-        } catch (err) {
-            setEmail('');
-        } finally {
-            setLoading(false); 
-        }
-    };
+        };
 
-    fetchCurrentUser();
-}, []);
+        fetchCurrentUser();
+    }, []);
 
 
     useEffect(() => {
@@ -48,9 +48,9 @@ export default function HomePage() {
         const fetchStats = async () => {
             try {
                 const response = await axios.get('https://aqua-venture-backend.onrender.com/api/dashboard/stats');
-               if (response.data.success) {
-                setStats(response.data.data)
-               }
+                if (response.data.success) {
+                    setStats(response.data.data)
+                }
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching stats:', error);
@@ -108,8 +108,8 @@ export default function HomePage() {
         </Link>
     );
 
-      if (loading) {
-       return (
+    if (loading) {
+        return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
@@ -136,12 +136,12 @@ export default function HomePage() {
         );
     }
 
-  
+
     return (
         <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
             {/* Welcome Header */}
             <div className="mb-8">
-                
+
                 <div className="flex justify-between items-center">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">
@@ -153,11 +153,11 @@ export default function HomePage() {
                         </p>
                     </div>
                     <div className="text-sm text-gray-500">
-                        {new Date().toLocaleDateString('en-US', { 
-                            weekday: 'long', 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
+                        {new Date().toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
                         })}
                     </div>
                 </div>
@@ -169,8 +169,8 @@ export default function HomePage() {
                     title="Total Customers"
                     value={loading ? "..." : stats.totalCustomers}
                     icon="👥"
-                /> 
-                 <StatCard
+                />
+                <StatCard
                     title="Active Members"
                     value={loading ? "..." : stats.activeCustomers}
                     icon="✅"
@@ -210,6 +210,13 @@ export default function HomePage() {
                     icon="🚪"
                     color="border-purple-500"
                 />
+                <QuickAction
+                    title="Walk Ins"
+                    description="Quick Walk ins check-in/out"
+                    link="/walkins"
+                    icon="🕓"
+                    color="border-black"
+                />
                 {role === 'admin' && (
                     <QuickAction
                         title="User Management"
@@ -237,9 +244,9 @@ export default function HomePage() {
                             {recentActivity.slice(0, 5).map((activity, index) => (
                                 <div key={index} className="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <div className="text-lg mr-3">
-                                        {activity.type === 'checkin' ? '🟢' : 
-                                         activity.type === 'checkout' ? '🔴' : 
-                                         activity.type === 'registration' ? '🆕' : '📝'}
+                                        {activity.type === 'checkin' ? '🟢' :
+                                            activity.type === 'checkout' ? '🔴' :
+                                                activity.type === 'registration' ? '🆕' : '📝'}
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-sm font-medium">{activity.description}</p>

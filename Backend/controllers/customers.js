@@ -2,6 +2,7 @@ const Customer = require('../models/customers')
 const mongoose = require('mongoose') // Add this import
 const nodemailer = require('nodemailer');
 const QrCode = require('qrcode');
+const {sendQrCode} = require('../Services/EmailService')
 exports.getCustomers = async (req, res) => {
     try {
         const customers = await Customer.find()
@@ -33,39 +34,7 @@ exports.registerCustomer = async (req, res) => {
 
     try {
         await newCustomer.save()
-
-        const qrData = `https://aqua-venture-backend.onrender.com/api/customers/${newCustomer._id}`;
-        // Generate QR code
-        const qrCodeImageBuffer = await QrCode.toBuffer(qrData);
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        })
-        const mailOptions = {
-            from: `"Gym App" <${process.env.EMAIL_USER}>`,
-            to: newCustomer.email,
-            subject: "Welcome to the Gym!",
-            html: `
-    <h1>Welcome to Aquaventure Fitness Gym , ${newCustomer.Name}!</h1> 
-    <p>Thank you for registering with us. We're excited to have you as a member of our fitness community.</p>
-     <p>Your unique QR code is attached below. Please present this code at the front desk during your visits for quick check-ins.</p>
-      <img src="cid:qrcode" alt="QR Code" style="width:300px; height:300px;" />
-        <p>If you have any questions or need assistance, feel free to reach out to our support team.</p> 
-        <p>Stay active and healthy!</p> <p>Best regards,
-        <br/>AFG Team</p>
-    `,
-            attachments: [
-                {
-                    filename: 'qrcode.png',
-                    content: qrCodeImageBuffer,
-                    cid: 'qrcode' // Same as above in img src
-                }
-            ]
-        };
-        await transporter.sendMail(mailOptions);
+        await sendQrCode(newCustomer)
         res.status(201).json({ success: true, data: newCustomer }) 
     } catch (error) {
         console.error(error.message)

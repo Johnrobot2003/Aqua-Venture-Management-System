@@ -6,7 +6,7 @@ export default function QrScannerPage() {
     const [scanMode, setScanMode] = useState(true);
     
     const handleSuccess = (customer) => {
-        alert(`Customer ${customer.Name} successfully ${customer.isCheckedIn ? 'checked in' : 'checked out'}`);
+       console.log("Customer processed:", customer);
     }
     
     return (

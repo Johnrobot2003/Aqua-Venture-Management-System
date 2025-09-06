@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { Scanner } from "@yudiel/react-qr-scanner";
 
@@ -30,17 +30,23 @@ export default function QrCheckInOutScanner({onSuccess}) {
             let output;
             if(customer.isCheckedIn) {
                 output = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkOut`);
-                setMessage(`Customer ${response.data.data.Name} successfully checked out`);
+                setMessage(`Customer ${customer.Name} successfully checked out`);
+                // Update customer data with new status
+                setCustomerData({...customer, isCheckedIn: false});
             } else {
                 output = await axios.post(`https://aqua-venture-backend.onrender.com/api/customers/${id}/checkIn`);
-                setMessage(`Customer ${response.data.data.Name} successfully checked in`);
+                setMessage(`Customer ${customer.Name} successfully checked in`);
+                // Update customer data with new status
+                setCustomerData({...customer, isCheckedIn: true});
             }
             
-            setCustomerData(response.data.data);
             setModalType('success');
             setShowModal(true);
-            onSuccess(response.data.data);
-            console.log("Check-in/out successful:", response.data);
+            
+            // Pass the updated customer data to parent
+            const updatedCustomer = customer.isCheckedIn ? {...customer, isCheckedIn: false} : {...customer, isCheckedIn: true};
+            onSuccess(updatedCustomer);
+            console.log("Check-in/out successful:", updatedCustomer);
             setError(null);
         } catch (error) {
             if (error.response && error.response.data) {
@@ -63,21 +69,9 @@ export default function QrCheckInOutScanner({onSuccess}) {
     }
 
     const closeModal = () => {
-        setShowModal(false);
-        setError(null);
-        setMessage(null);
-        setCustomerData(null);
+        // Re-render the entire page/component
+        window.location.reload();
     }
-
-    // Auto close modal after 3 seconds for success
-    useEffect(() => {
-        if (showModal && modalType === 'success') {
-            const timer = setTimeout(() => {
-                closeModal();
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [showModal, modalType]);
 
     return(
         <div className="flex flex-col items-center justify-center relative">

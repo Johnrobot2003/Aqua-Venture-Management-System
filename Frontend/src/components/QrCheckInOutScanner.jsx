@@ -151,13 +151,6 @@ export default function QrCheckInOutScanner({onSuccess}) {
                                 {modalType === 'success' ? 'Continue Scanning' : 'Try Again'}
                             </button>
                         </div>
-                        
-                        {/* Auto-close indicator for success */}
-                        {modalType === 'success' && (
-                            <div className="mt-3 text-center">
-                                <p className="text-xs text-gray-500">This will close automatically in 3 seconds</p>
-                            </div>
-                        )}
                     </div>
                 </div>
             )}

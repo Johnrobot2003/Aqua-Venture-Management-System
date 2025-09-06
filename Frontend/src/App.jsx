@@ -18,6 +18,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import CheckInSystem from './pages/CheckInSystem.jsx';
 import Reports from './pages/Reports.jsx';
 import WalkInPage from './pages/WalkInPage.jsx';
+import QrScannerPage from './pages/QrScannerPage.jsx';  
 function App() {
   return (
 
@@ -29,6 +30,12 @@ function App() {
           <Route path="/checkin" element={
             <ProtectedRoutes>
               <CheckInSystem />
+            </ProtectedRoutes>
+
+          } />
+           <Route path="/checkin/scanCustomer" element={
+            <ProtectedRoutes>
+              <QrScannerPage />
             </ProtectedRoutes>
 
           } />

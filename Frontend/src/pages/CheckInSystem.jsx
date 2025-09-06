@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ScanQrCode } from 'lucide-react';
 
 export default function CheckInSystem({ isLoggedIn, userRole }) {
     const [customers, setCustomers] = useState([]);
@@ -51,7 +52,7 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
             setButtonLoading(null)
             console.error("Error checking in customer:", err);
             alert(err.response?.data?.message || "Error checking in customer");
-        }finally{
+        } finally {
             setButtonLoading(null)
         }
     };
@@ -65,13 +66,13 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
             setButtonLoading(null)
             console.error("Error checking out customer:", err);
             alert(err.response?.data?.message || "Error checking out customer");
-        }finally{
+        } finally {
             setButtonLoading(null)
         }
     };
 
-    if (loading){
-         return (
+    if (loading) {
+        return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
@@ -102,11 +103,18 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                             Clear
                         </button>
                     )}
+
                 </div>
             </div>
+            <Link
+                to={`/checkin/scanCustomer`}
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            >
+                Qr Code Scanner <ScanQrCode className="inline-block" />
+            </Link>
 
             {/* Results Count */}
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 mt-5">
                 Showing {filteredCustomers.length} of {customers.length} customers
             </p>
 
@@ -141,10 +149,10 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                                         <span className="font-semibold">Monthly Access:</span>{" "}
                                         <span
                                             className={`px-2 py-1 rounded text-xs font-medium ${customer.monthlyAccess === "Basic"
-                                                    ? "bg-gray-200 text-gray-800"
-                                                    : customer.monthlyAccess === "Silver"
-                                                        ? "bg-gray-400 text-white"
-                                                        : "bg-yellow-500 text-yellow-900"
+                                                ? "bg-gray-200 text-gray-800"
+                                                : customer.monthlyAccess === "Silver"
+                                                    ? "bg-gray-400 text-white"
+                                                    : "bg-yellow-500 text-yellow-900"
                                                 }`}
                                         >
                                             {customer.monthlyAccess}
@@ -153,15 +161,15 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Phone:</span> {customer.phone}
                                     </p>
-                                     <p className="text-gray-700 dark:text-gray-400">
+                                    <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Email:</span> {customer.email}
                                     </p>
                                     <p className="text-gray-700 dark:text-gray-400">
                                         <span className="font-semibold">Monthly Status:</span>{" "}
                                         <span
                                             className={`inline-flex items-center ${customer.monthlyStatus === "up to date"
-                                                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                                                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                                : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
                                                 } text-xs font-medium px-2.5 py-0.5 rounded-sm`}
                                         >
                                             {customer.monthlyStatus}
@@ -171,8 +179,8 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                                         <span className="font-semibold">Checked in:</span>
                                         <span
                                             className={`ml-2 ${customer.isCheckedIn
-                                                    ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                                                    : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
+                                                ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                                                : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
                                                 } text-xs font-medium px-2.5 py-0.5 rounded-sm`}
                                         >
                                             {customer.isCheckedIn ? "Checked in" : "Checked out"}
@@ -184,12 +192,12 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                                     {!customer.isCheckedIn ? (
                                         <button
                                             onClick={() => handleCheckIn(customer._id)}
-                                            disabled = {buttonLoading === customer._id}
+                                            disabled={buttonLoading === customer._id}
                                             className={`flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white  rounded-lg
-                                            ${buttonLoading === customer._id 
-                                                ? "bg-green-400 cursor-not-allowed"
-                                                : "bg-green-600 hover:bg-green-700"
-                                            }
+                                            ${buttonLoading === customer._id
+                                                    ? "bg-green-400 cursor-not-allowed"
+                                                    : "bg-green-600 hover:bg-green-700"
+                                                }
                                                 `}
                                         >
                                             {buttonLoading === customer._id ? "Checking in ..." : "Check in"}
@@ -208,14 +216,14 @@ export default function CheckInSystem({ isLoggedIn, userRole }) {
                                             {buttonLoading === customer._id ? "Checking out ..." : "Check out"}
                                         </button>
                                     )}
-                                     <Link
+                                    <Link
                                         to={`/customers/${customer._id}/checkInHistory`}
                                         className="flex-1 min-w-[80px] px-3 py-2 text-sm font-medium text-center text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 transition-colors"
                                     >
                                         History
                                     </Link>
                                 </div>
-                                   
+
                             </div>
                         </div>
                     ))}

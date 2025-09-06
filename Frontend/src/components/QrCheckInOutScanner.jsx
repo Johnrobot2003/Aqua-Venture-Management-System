@@ -77,7 +77,7 @@ export default function QrCheckInOutScanner({onSuccess}) {
         <div className="flex flex-col items-center justify-center relative">
             <h1>Scan here</h1>
             
-            <div className="w-64 h-64 mt-4">
+            <div className="w-95 h-95 mt-4">
                 <Scanner
                     onScan={handleScan}
                     onError={handleError}
